@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table-locale-all.min.js" integrity="sha256-LG/BnTkgoOopUSohMh9MghBw3E6KGf+qR8DuF+/cxNo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js" integrity="sha256-jdwX0QzXB7z7Xc7Vz0ovtIHWO5qIZWg0aLcGv44JDgE=" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container border rounded border-light p-2 mt-3">
+            <form id="dialog-form" action="/storyteller" method="post">
+                <h3>Dialogs</h3>
+
+                <!-- Dialog id -->
+                <div class="form-group row">
+                    <label for="index" class="col-sm-2 col-form-label">Id :<span class="text-danger">*</span></label>
+                    <div class='col-sm-10'>
+                        <input type="text" name="index" class="form-control" id="index">
+                        <small id="indexHelp" class="form-text text-muted">The index must be an unique string.</small>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <!-- Dialog appearance conditions -->
+                <div class="card border border-warning mt-3">
+                    <h5 class="card-header text-white bg-warning mb-3">
+                        Conditions
+                    </h5>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="trigger" class="col-sm-2 col-form-label">Trigger :</label>
+                            <div class='col-sm-10'>
+                                <input type="text" class="form-control" name="trigger" id="trigger">
+                                <small id="triggerHelp" class="form-text text-muted">NPC names that will be able to trigger the dialog.</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="objectif" class="col-sm-2 col-form-label">Objectives :</label>
+                            <div class='col-sm-10'>
+                                <input type="text" class="form-control" name="objectif" id="objectif">
+                                <small id="objectifHelp" class="form-text text-muted">Objectives needed to enable the dialog.</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="item" class="col-sm-2 col-form-label">Item :</label>
+                            <div class='col-sm-5'>
+                                <input type="text" class="form-control" name="item" id="item">
+                                <small id="itemHelp" class="form-text text-muted">Necessary items to enable the dialog.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <!-- Page manager -->
+                <div class="card border mt-3">
+                    <div class="card-header bg-light">
+                        <ul class="nav nav-tabs card-header-tabs" id="pageTabs" role="tablist">
+                            <li class="nav-item border-bottom-0"><a class="nav-link" href="#" id="addpageButton">+</a></li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="page-content">
+
+                        </div>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <button type="submit" class="btn btn-block btn-success mt-3">Generate</button>
+                
+            </form>
+        </div>
+        <script src="storyteller.js"></script>
+    </body>
+</html>

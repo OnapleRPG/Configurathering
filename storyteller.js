@@ -327,4 +327,14 @@ ${action.name}</span>&nbsp;${action.arg}<button type="button" class="close remov
     }
 }
 
+const app = new Vue({
+    el: '.container',
+    data: {
+        test: 'Test !'
+    },
+    methods: {
+        addPage : function(event) {
 
+        }
+    }
+});
