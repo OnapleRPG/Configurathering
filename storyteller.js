@@ -74,7 +74,7 @@ function createpage(page) {
 function createButton(page) {
     $(`#buttonlist${page.index}`).append(buttonTemplate(page))
 }
-
+/*
 $(function () {
 
 
@@ -325,16 +325,30 @@ ${action.name}</span>&nbsp;${action.arg}<button type="button" class="close remov
         }
 
     }
-}
+}*/
 
 const app = new Vue({
     el: '.container',
     data: {
-        test: 'Test !'
+        pages: []
     },
     methods: {
-        addPage : function(event) {
-
+        addPage: function(event) {
+            var pageNumber = app.pages.length + 1;
+            app.pages.push({'id': pageNumber});
+            // Tab switch not working dynamically ! Didn't the tab appear yet ?
+            $('#page-' + pageNumber + '-link').tab('show');
+        },
+        addButton: function(pageId) {
+            if (!app.pages[pageId - 1].buttons) {
+                app.pages[pageId - 1].buttons = [];
+            }
+            app.pages[pageId - 1].buttons.push({'id': app.pages[pageId - 1].buttons.length + 1});
+            this.$forceUpdate();
+        },
+        removeButton: function(pageId, buttonId) {
+            app.pages[pageId - 1].buttons = app.pages[pageId - 1].buttons.splice(buttonId - 1, buttonId - 1);
+            this.$forceUpdate();
         }
     }
 });
