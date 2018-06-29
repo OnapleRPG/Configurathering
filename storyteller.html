@@ -88,7 +88,7 @@
                                     <div v-for="button in page.buttons" class="card">
                                         <div class="card-header" v-bind:id="'page-' + page.id + '-button-' + button.id + '-header'">
                                             <h5 class="mb-0">
-                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'page-' + page.id + '-button-' + button.id + '-collapse'" aria-expanded="true" v-bind:aria-controls="'page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }}</button>
+                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#page-' + page.id + '-button-' + button.id + '-collapse'" aria-expanded="true" v-bind:aria-controls="'page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }}</button>
                                                 <button v-on:click="removeButton(page.id, button.id)" type="button" class="close removebutton" v-bind:data-page="page.id" v-bind:data-button="button.id" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -98,16 +98,23 @@
                                             <div class="card-body">
                                                 <div class="form-row m-1">
                                                     <div class="col"><input type="text" class="form-control" v-bind:id="'page-' + page.id + '-button-' + button.id + '-text'" placeholder="Texte" /></div>
-                                                    <div class="col"><input type="text" class="form-control" v-bind:id="'page-' + page.id + '-button-' + button.id + '-color'" placeholder="Color" /></div>
                                                 </div>
                                                 <div class="card m-2 p-0">
 
                                                     <ul class="list-group list-group-flush" v-bind:id="'page-' + page.id + '-button-' + button.id + '-actions'">
+                                                        <!-- Action -->
+                                                        <li v-for="action in button.actions" class="list-group-item" data-type="${type}" data-args="${arg}">
+                                                            <span class="badge badge-info">{{ action.type }}</span>&nbsp;{{ action.arguments }}
+                                                            <button v-on:click="removeAction(page.id, button.id, action.id)" type="button" class="close removeAction" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </li>
+                                                        <!-- ----- -->
                                                     </ul>
                                                     <div class="card-footer border-top-0">
                                                         <div class="form-row">
                                                             <div class="col">
-                                                                <select v-bind:name="'page-' + page.id + '-button-' + button.id + '-type'" class="form-control">
+                                                                <select v-model="button.newActionType" v-bind:name="'page-' + page.id + '-button-' + button.id + '-type'" class="form-control">
                                                                     <option value="OPEN_DIALOG">Open a given dialog</option>
                                                                     <option value="EXECUTE_COMMAND">Execute a command</option>
                                                                     <option value="GIVE_ITEM">Give an object to the player</option>
@@ -118,8 +125,8 @@
                                                                     <option value="STOP_KILL_COUNT">Stop counting kills for a mob</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col"><input type="text" v-bind:name="'page-' + page.id + '-button-' + button.id + '-arg'" class="form-control" placeholder="Args" /></div>
-                                                            <div class="col-auto"><button type="button" v-bind:data-page="page.id" v-bind:data-button="button.id" class="btn btn-primary addActionbtn">ajouter</button></div>
+                                                            <div class="col"><input v-model="button.newActionArguments" type="text" v-bind:name="'page-' + page.id + '-button-' + button.id + '-arg'" class="form-control" placeholder="Args" /></div>
+                                                            <div class="col-auto"><button v-on:click="addAction(page.id, button.id)" type="button" v-bind:data-page="page.id" v-bind:data-button="button.id" class="btn btn-primary addActionbtn">Add action</button></div>
                                                         </div>
                                                     </div>
                                                 </div>

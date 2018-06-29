@@ -368,6 +368,38 @@ const app = new Vue({
             });
             page.buttons.splice(page.buttons.indexOf(button), 1);
             this.$forceUpdate();
+        },
+
+        addAction: function(pageId, buttonId) {
+            var page = app.pages.find(function (element) {
+                return element.id === pageId;
+            });
+            var button = page.buttons.find(function (element) {
+                return element.id === buttonId;
+            });
+            if (!button.actions) {
+                button.actions = [];
+                button.actionCount = 0;
+            }
+            button.actionCount++;
+            button.actions.push(
+                {'id': button.actionCount, 'type': button.newActionType, 'arguments': button.newActionArguments}
+            );
+            this.$forceUpdate();
+        },
+
+        removeAction: function(pageId, buttonId, actionId) {
+            var page = app.pages.find(function (element) {
+                return element.id === pageId;
+            });
+            var button = page.buttons.find(function (element) {
+                return element.id === buttonId;
+            });
+            var action = button.actions.find(function (element) {
+                return element.id === actionId;
+            });
+            button.actions.splice(button.actions.indexOf(action), 1);
+            this.$forceUpdate();
         }
 
     }
