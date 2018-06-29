@@ -8,7 +8,7 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
 
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table-locale-all.min.js" integrity="sha256-LG/BnTkgoOopUSohMh9MghBw3E6KGf+qR8DuF+/cxNo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js" integrity="sha256-l+jZldmOASkIPelan4NKyAFD+oGNqPulrVQwsjxuCXc=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js" integrity="sha256-jdwX0QzXB7z7Xc7Vz0ovtIHWO5qIZWg0aLcGv44JDgE=" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -62,7 +62,9 @@
                     <div class="card-header bg-light">
                         <ul class="nav nav-tabs card-header-tabs" id="pageTabs" role="tablist">
                             <!-- Page tabs -->
-                            <li v-for="page in pages" class="nav-item"><a v-bind:id="'page-' + page.id + '-link'" class="nav-link" data-toggle="tab" v-bind:href="'#page-' + page.id" role="tab" v-bind:aria-controls="'page-' + page.id" aria-selected="true">Page {{ page.id }}</a></li>
+                            <li v-for="page in pages" class="nav-item">
+                                <a v-bind:id="'page-' + page.id + '-link'" class="nav-link" data-toggle="tab" v-bind:href="'#page-' + page.id" role="tab" v-bind:aria-controls="'page-' + page.id" aria-selected="true">Page {{ page.id }}</a>
+                            </li>
                             <!-- ----- -->
                             <li class="nav-item border-bottom-0"><a v-on:click="addPage" class="nav-link" href="#" id="addpageButton">+</a></li>
                         </ul>
@@ -86,9 +88,10 @@
                                     <div v-for="button in page.buttons" class="card">
                                         <div class="card-header" v-bind:id="'page-' + page.id + '-button-' + button.id + '-header'">
                                             <h5 class="mb-0">
-                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'page-' + page.id + '-button-' + button.id + '-collapse'" aria-expanded="true" v-bind:aria-controls="'page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }}</button><button v-on:click="removeButton(page.id, button.id)" type="button" class="close removebutton" v-bind:data-page="page.id" v-bind:data-button="button.id" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'page-' + page.id + '-button-' + button.id + '-collapse'" aria-expanded="true" v-bind:aria-controls="'page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }}</button>
+                                                <button v-on:click="removeButton(page.id, button.id)" type="button" class="close removebutton" v-bind:data-page="page.id" v-bind:data-button="button.id" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
                                             </h5>
                                         </div>
                                         <div v-bind:id="'page-' + page.id + '-button-' + button.id + '-collapse'" class="collapse" v-bind:aria-label="'page-' + page.id + '-button-' + button.id + '-collapse'" v-bind:data-parent="'page-' + page.id + '-buttons'">

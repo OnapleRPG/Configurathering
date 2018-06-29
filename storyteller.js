@@ -326,6 +326,9 @@ ${action.name}</span>&nbsp;${action.arg}<button type="button" class="close remov
 
     }
 }*/
+$(function() {
+    $('#trigger').tokenfield();
+});
 
 const app = new Vue({
     el: '.container',
@@ -333,22 +336,39 @@ const app = new Vue({
         pages: []
     },
     methods: {
+
         addPage: function(event) {
             var pageNumber = app.pages.length + 1;
             app.pages.push({'id': pageNumber});
             // Tab switch not working dynamically ! Didn't the tab appear yet ?
             $('#page-' + pageNumber + '-link').tab('show');
         },
+
         addButton: function(pageId) {
-            if (!app.pages[pageId - 1].buttons) {
-                app.pages[pageId - 1].buttons = [];
+            var page = app.pages.find(function (element) {
+                return element.id === pageId;
+            });
+            if (!page.buttons) {
+                page.buttons = [];
+                page.buttonCount = 0;
             }
-            app.pages[pageId - 1].buttons.push({'id': app.pages[pageId - 1].buttons.length + 1});
+            page.buttonCount++;
+            page.buttons.push({'id': page.buttonCount});
             this.$forceUpdate();
+            // Button collapse not working right after added. Seems to be the same problem as for the tab.
+            $('#page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
         },
+
         removeButton: function(pageId, buttonId) {
-            app.pages[pageId - 1].buttons = app.pages[pageId - 1].buttons.splice(buttonId - 1, buttonId - 1);
+            var page = app.pages.find(function (element) {
+                return element.id === pageId;
+            });
+            var button = page.buttons.find(function (element) {
+                return element.id === buttonId;
+            });
+            page.buttons.splice(page.buttons.indexOf(button), 1);
             this.$forceUpdate();
         }
+
     }
 });
