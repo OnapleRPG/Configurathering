@@ -97,7 +97,6 @@
                                                     <small v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-text-help'" class="form-text text-muted">Text that's going to be displayed on the page.</small>
                                                 </div>
                                             </div>
-                                            <button v-on:click="addButton(dialog.id, page.id)" type="button" class="btn btn-info addButtonbtn m-2">Add a button</button>
                                             <div v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-buttons'">
 
                                                 <!-- Button -->
@@ -152,6 +151,7 @@
                                                 <!-- ----- -->
 
                                             </div>
+                                            <button v-on:click="addButton(dialog.id, page.id)" type="button" class="btn btn-info addButtonbtn m-2">Add a button</button>
                                         </div>
                                         <!-- ----- -->
 

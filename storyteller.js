@@ -9,24 +9,27 @@ const app = new Vue({
         dialogCount: 0
     },
     methods: {
-
+        /** Get a dialog from its id */
         getDialogById: function(dialogId) {
             return app.dialogs.find(function(element) {
                 return element.id === dialogId;
             });
         },
+        /** Get a page from its id and its parent id */
         getPageById: function(dialogId, pageId) {
             var dialog = app.getDialogById(dialogId);
             return dialog.pages.find(function(element) {
                 return element.id === pageId;
             });
         },
+        /** Get a button from its id and its parents id */
         getButtonById: function(dialogId, pageId, buttonId) {
             var page = app.getPageById(dialogId, pageId);
             return page.buttons.find(function(element) {
                 return element.id === buttonId;
             });
         },
+        /** Get a button action from its id and its parents id */
         getActionById: function(dialogId, pageId, buttonId, actionId) {
             var button = app.getButtonById(dialogId, pageId, buttonId);
             return button.actions.find(function(element) {
@@ -34,19 +37,26 @@ const app = new Vue({
             });
         },
 
+        /** Add a dialog to the configuration */
         addDialog: function() {
             app.dialogCount++;
             app.dialogs.push(
                 {'id': app.dialogCount, 'pageCount': 0, 'name': '', 'trigger': '', 'item': '', 'objective': ''}
             );
-            this.$forceUpdate();
+            window.onbeforeunload = function(){
+                return 'Are you sure you want to leave ?';
+            };
         },
+        /** Remove a dialog from the configuration */
         removeDialog: function(dialogId) {
             var dialog = app.getDialogById(dialogId);
             app.dialogs.splice(app.dialogs.indexOf(dialog), 1);
-            this.$forceUpdate();
+            if (app.dialogs.length === 0) {
+                window.onbeforeunload = null;
+            }
         },
 
+        /** Add a page to the dialog */
         addPage: function(dialogId) {
             var dialog = app.getDialogById(dialogId);
             if (!dialog.pages || dialog.pages.length == 0) {
@@ -54,17 +64,17 @@ const app = new Vue({
             }
             dialog.pageCount++;
             dialog.pages.push({'id': dialog.pageCount, 'buttonCount': 0, 'text': ''});
-            this.$forceUpdate();
             // Tab switch not working dynamically ! Didn't the tab appear yet ?
             $('#page-' + app.dialog + '-link').tab('show');
         },
+        /** Remove a page from the dialog */
         removePage: function(dialogId, pageId) {
             var dialog = app.getDialogById(dialogId);
             var page = app.getPageById(dialogId, pageId);
             dialog.pages.splice(dialog.pages.indexOf(page), 1);
-            this.$forceUpdate();
         },
 
+        /** Add a button from the page */
         addButton: function(dialogId, pageId) {
             var page = app.getPageById(dialogId, pageId);
             if (!page.buttons || page.buttons.length == 0) {
@@ -72,17 +82,17 @@ const app = new Vue({
             }
             page.buttonCount++;
             page.buttons.push({'id': page.buttonCount, 'text': ''});
-            this.$forceUpdate();
             // Button collapse not working right after added. Seems to be the same problem as for the tab.
             $('#page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
         },
+        /** Remove a button from the page */
         removeButton: function(dialogId, pageId, buttonId) {
             var page = app.getPageById(dialogId, pageId);
             var button = app.getButtonById(dialogId, pageId, buttonId);
             page.buttons.splice(page.buttons.indexOf(button), 1);
-            this.$forceUpdate();
         },
 
+        /** Add an action to the button */
         addAction: function(dialogId, pageId, buttonId) {
             var button = app.getButtonById(dialogId, pageId, buttonId);
             if (!button.actions) {
@@ -93,13 +103,12 @@ const app = new Vue({
             button.actions.push(
                 {'id': button.actionCount, 'type': button.newActionType, 'arguments': button.newActionArguments}
             );
-            this.$forceUpdate();
         },
+        /** Remove an action from the button */
         removeAction: function(dialogId, pageId, buttonId, actionId) {
             var button = app.getButtonById(dialogId, pageId, buttonId);
             var action = app.getActionById(dialogId, pageId, buttonId, actionId);
             button.actions.splice(button.actions.indexOf(action), 1);
-            this.$forceUpdate();
         }
 
     }
