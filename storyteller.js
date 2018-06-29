@@ -9,6 +9,7 @@ const app = new Vue({
         dialogCount: 0
     },
     methods: {
+
         /** Get a dialog from its id */
         getDialogById: function(dialogId) {
             return app.dialogs.find(function(element) {
@@ -36,6 +37,7 @@ const app = new Vue({
                 return element.id === actionId;
             });
         },
+
 
         /** Add a dialog to the configuration */
         addDialog: function() {
@@ -109,6 +111,25 @@ const app = new Vue({
             var button = app.getButtonById(dialogId, pageId, buttonId);
             var action = app.getActionById(dialogId, pageId, buttonId, actionId);
             button.actions.splice(button.actions.indexOf(action), 1);
+        },
+
+
+        /** Convert the JS data into JSON object */
+        exportToJson: function() {
+            var json = {};
+            for (var dialogId in app.dialogs) {
+                var dialog = app.dialogs[dialogId];
+                var dialogName = dialog.name;
+                json[dialogName] = {};
+                json[dialogName].trigger = dialog.trigger;
+                json[dialogName].objective = dialog.objective;
+                json[dialogName].items = dialog.item;
+                json[dialogName].pages = [];
+                for (page in dialog.pages) {
+                    json[dialogName].pages[json[dialogName].pages.length] = {};
+                }
+            }
+            return JSON.stringify(json);
         }
 
     }
