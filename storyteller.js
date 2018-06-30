@@ -6,7 +6,8 @@ const app = new Vue({
     el: '.container',
     data: {
         dialogs: [],
-        dialogCount: 0
+        dialogCount: 0,
+        json: ""
     },
     methods: {
 
@@ -48,6 +49,7 @@ const app = new Vue({
             window.onbeforeunload = function(){
                 return 'Are you sure you want to leave ?';
             };
+            app.$forceUpdate();
         },
         /** Remove a dialog from the configuration */
         removeDialog: function(dialogId) {
@@ -56,6 +58,7 @@ const app = new Vue({
             if (app.dialogs.length === 0) {
                 window.onbeforeunload = null;
             }
+            app.$forceUpdate();
         },
 
         /** Add a page to the dialog */
@@ -66,6 +69,7 @@ const app = new Vue({
             }
             dialog.pageCount++;
             dialog.pages.push({'id': dialog.pageCount, 'buttonCount': 0, 'text': ''});
+            app.$forceUpdate();
             // Tab switch not working dynamically ! Didn't the tab appear yet ?
             $('#page-' + app.dialog + '-link').tab('show');
         },
@@ -74,6 +78,7 @@ const app = new Vue({
             var dialog = app.getDialogById(dialogId);
             var page = app.getPageById(dialogId, pageId);
             dialog.pages.splice(dialog.pages.indexOf(page), 1);
+            app.$forceUpdate();
         },
 
         /** Add a button from the page */
@@ -84,6 +89,7 @@ const app = new Vue({
             }
             page.buttonCount++;
             page.buttons.push({'id': page.buttonCount, 'text': ''});
+            app.$forceUpdate();
             // Button collapse not working right after added. Seems to be the same problem as for the tab.
             $('#page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
         },
@@ -92,6 +98,7 @@ const app = new Vue({
             var page = app.getPageById(dialogId, pageId);
             var button = app.getButtonById(dialogId, pageId, buttonId);
             page.buttons.splice(page.buttons.indexOf(button), 1);
+            app.$forceUpdate();
         },
 
         /** Add an action to the button */
@@ -105,17 +112,19 @@ const app = new Vue({
             button.actions.push(
                 {'id': button.actionCount, 'type': button.newActionType, 'arguments': button.newActionArguments}
             );
+            app.$forceUpdate();
         },
         /** Remove an action from the button */
         removeAction: function(dialogId, pageId, buttonId, actionId) {
             var button = app.getButtonById(dialogId, pageId, buttonId);
             var action = app.getActionById(dialogId, pageId, buttonId, actionId);
             button.actions.splice(button.actions.indexOf(action), 1);
+            app.$forceUpdate();
         },
 
 
-        /** Convert the JS data into JSON object */
-        exportToJson: function() {
+        /** Convert the dialogs data into JSON object */
+        exportDialogs: function() {
             var json = {};
             for (var dialogId in app.dialogs) {
                 var dialog = app.dialogs[dialogId];
@@ -124,12 +133,54 @@ const app = new Vue({
                 json[dialogName].trigger = dialog.trigger;
                 json[dialogName].objective = dialog.objective;
                 json[dialogName].items = dialog.item;
-                json[dialogName].pages = [];
-                for (page in dialog.pages) {
-                    json[dialogName].pages[json[dialogName].pages.length] = {};
-                }
+                json[dialogName].pages = app.exportPages(dialog.pages);
             }
-            return JSON.stringify(json);
+            return json
+        },
+        /** Convert the pages data into JSON ready object */
+        exportPages: function(pages) {
+            var json = [];
+            var i = 0;
+            for (var pageId in pages) {
+                var page = pages[pageId];
+                json[i] = {};
+                json[i].text = page.text;
+                json[i].buttons = app.exportButtons(page.buttons);
+                i++;
+            }
+            return json;
+        },
+        /** Convert the buttons data into JSON ready object */
+        exportButtons: function(buttons) {
+            var json = [];
+            var i = 0;
+            for (var buttonId in buttons) {
+                var button = buttons[buttonId];
+                json[i] = {};
+                json[i].text = button.text;
+                if (button.actions && button.actions.length > 0) {
+                    json[i].actions = app.exportActions(button.actions);
+                }
+                i++;
+            }
+            return json;
+        },
+        /** Convert the actions data into JSON ready object */
+        exportActions: function(actions) {
+            var json = [];
+            var i = 0;
+            for (var actionId in actions) {
+                var action = actions[actionId];
+                json[i] = action.type + ' ' + action.arguments;
+                i++;
+            }
+            return json;
+        },
+
+
+        /** Update the exported JSON to match the content of the page */
+        updateJson: function() {
+            app.json = JSON.stringify(app.exportDialogs(), null, 4);
         }
 
     }
