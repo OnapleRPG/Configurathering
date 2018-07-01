@@ -1,13 +1,10 @@
-﻿$(function() {
-    $('#trigger').tokenfield();
-});
-
-const app = new Vue({
+﻿const app = new Vue({
     el: '.container',
     data: {
         dialogs: [],
         dialogCount: 0,
-        json: ""
+        exportedJson: "",
+        importedJson: ""
     },
     methods: {
 
@@ -177,11 +174,102 @@ const app = new Vue({
             return json;
         },
 
+        /** Convert the JSON object into dialogs data */
+        importDialogs: function(dialogs) {
+            var newData = [];
+            var i = 0;
+            for (var dialogId in dialogs) {
+                var dialog = dialogs[dialogId];
+                newData[i] = {};
+                newData[i].id = i+1;
+                newData[i].name = dialogId;
+                newData[i].trigger = dialog.trigger;
+                newData[i].objective = dialog.objective;
+                newData[i].item = dialog.items;
+                newData[i].pages = app.importPages(dialog.pages);
+                newData[i].pageCount = newData[i].pages.length;
+                i++;
+            }
+            return newData;
+        },
+        /** Convert the pages part of the JSON object into pages data */
+        importPages: function(pages) {
+            var newData = [];
+            var i = 0;
+            for (var pageId in pages) {
+                var page = pages[pageId];
+                newData[i] = {};
+                newData[i].id = i+1;
+                newData[i].text = page.text;
+                newData[i].buttons = app.importButtons(page.buttons);
+                newData[i].buttonCount = newData[i].buttons.length;
+                i++;
+            }
+            return newData;
+        },
+        /** Convert the buttons part of the JSON object into buttons data */
+        importButtons: function(buttons) {
+            var newData = [];
+            var i = 0;
+            for (var buttonId in buttons) {
+                var button = buttons[buttonId];
+                newData[i] = {};
+                newData[i].id = i+1;
+                newData[i].text = button.text;
+                newData[i].actions = app.importActions(button.actions);
+                newData[i].actionCount = newData[i].actions.length;
+                i++;
+            }
+            return newData;
+        },
+        /** Convert the actions part of the JSON object into actions data */
+        importActions: function(actions) {
+            var newData = [];
+            var i = 0;
+            for (var actionId in actions) {
+                var action = actions[actionId];
+                newData[i] = {};
+                newData[i].type = action.substring(0, action.indexOf(' ')+1)
+                newData[i].arguments = action.substring(action.indexOf(' ')+1);
+                i++;
+            }
+            return newData;
+        },
+
 
         /** Update the exported JSON to match the content of the page */
         updateJson: function() {
-            app.json = JSON.stringify(app.exportDialogs(), null, 4);
+            app.exportedJson = JSON.stringify(app.exportDialogs(), null, 4);
+        },
+        /** Update the imported JSON/HOCON to match the content of the file */
+        importFile: function(event) {
+            if (event.target.files.length == 0) {
+                return;
+            }
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = (function(file) {
+                return function(e) {
+                    app.importedJson = e.target.result;
+                    $('.import-modal').modal('show');
+                }
+            })(file);
+            reader.readAsBinaryString(file);
+        },
+        /** Try to convert the content that has already been loaded into JSON */
+        convertFileContent: function(event) {
+            var importedObject = JSON.parse(app.importedJson)
+            var importedData = app.importDialogs(importedObject);
+            app.dialogCount = importedData.length;
+            app.dialogs = importedData;
+            $('.modal').modal('hide');
         }
 
     }
+});
+
+$(function() {
+    $('#trigger').tokenfield();
+
+    document.getElementById('importFile').addEventListener('change', app.importFile, false);
 });
