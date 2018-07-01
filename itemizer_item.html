@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+              integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+              crossorigin="anonymous">
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+                integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+                integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"
+                integrity="sha256-l+jZldmOASkIPelan4NKyAFD+oGNqPulrVQwsjxuCXc=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js"
+                integrity="sha256-jdwX0QzXB7z7Xc7Vz0ovtIHWO5qIZWg0aLcGv44JDgE=" crossorigin="anonymous"></script>
+    </head>
+    <title>Item configuration page</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Item Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label for="item" class="col-sm-2 col-form-label">Item :<span class="text-danger">*</span>
+                        </label>
+                        <div class='col-sm-2'>
+                            <input type="text" class="form-control" name="item" id="item">
+                            <small id="itemHelp" class="form-text text-muted">Necessary items to enable the dialog.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="base" class="col-form-Label">Object base : <span
+                                        class="text-danger">*</span></label>
+                                <div>
+                                    <input type="text" id="base" class="form-control" name="type">
+                                    <small id="baseHelp" class=" form-text text-muted">Item basis for your
+                                        customisation
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="name" class=" col-form-Label">Custom name : <span
+                                        class="text-danger">*</span></label>
+                                <div>
+                                    <input type="text" id="name" class="form-control" name="type">
+                                    <small id="nameHelp" class=" form-text text-muted">Item basis for your
+                                        customisation
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row"><label for="lore" class="col-sm-4 col-form-label!div">Lore : </label>
+                        <div class="col-sm-8">
+                            <textarea name="lore" id="lore" cols="30" rows="4" class="form-control"></textarea>
+                            <small id="loreHelp" class="form-text text-muted">Your item could have a wonderful story
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">durability</span>
+                            </div>
+                            <input type="number" class="form-control">
+                            <div class="input-group-append">
+                            <span class="input-group-text">/</span>
+                            <input type="number" class="form-control">
+
+                                <div class="input-group-text">
+                                    <input type="checkbox" name="unbreakable" id="unbreakable" data-toggle="tooltip"
+                                           data-placement="top" data-text="Unbreakable ?"
+                                           aria-label="Checkbox for following text input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="form-group">
+                            <label for="miners">Miners</label>
+                            <div>
+                                <select id="miners" class="form-control" multiple></select>
+                                <small class="form-text text-muted">List miners associated to your object</small>
+                            </div>
+                        </div>
+                    <label>Enchants</label>
+                    <div class="card m-2">
+                        <div class="card-body"></div>
+                        <div class=""card-footer>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                                    </div>
+                                    <select class="custom-select" id="inputGroupSelect01">
+                                        <option selected>Choose...</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $("#miners").select2({
+            tags: true,
+            tokenSeparators: [',', ' ']
+        })
+    })
+</script>
+</body>
+</html>
