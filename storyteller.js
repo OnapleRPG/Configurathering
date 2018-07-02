@@ -46,6 +46,9 @@
             window.onbeforeunload = function(){
                 return 'Are you sure you want to leave ?';
             };
+            $(".tagsfiled").select2(
+                {tags : true}
+            );
             app.$forceUpdate();
         },
         /** Remove a dialog from the configuration */
@@ -269,7 +272,10 @@
 });
 
 $(function() {
-    $('#trigger').tokenfield();
+    $('#trigger').select2({
+        tags : true,
+        tokenSeparators: [',', ' '],
+    });
 
     document.getElementById('importFile').addEventListener('change', app.importFile, false);
 });

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuration des miners</title>
+    <script src="bundle.js"></script>
+    <link rel="stylesheet" href="bundle.css">
+    <script src="node_modules/select2/dist/js/select2.full.min.js">
+    </script>
+    <link rel="stylesheet" href="node_modules/select2/dist/css/select2.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Miners</h5>
+        </div>
+        <div class="card-body">
+            <div class="form-group"><label for="index">Index</label>
+                <div>
+                    <input id="index" type="text" class="form-control">
+                    <small class="form-text text-muted">Index du miner</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inherit">Héritage</label>
+                <div>
+                    <select name="inherit" id="inherit" class=form-control" multiple></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="miners">Liste des blocks minable</label>
+                <select class="select" multiple id="miners"></select><small class="text-muted form-text">lister les blocks que l'item pourra casser</small>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+       $("#inherit").select2({
+           tags : true,
+           tokenDelimiter:[","],
+           width: "100%"
+       });
+       $.getJSON("blockitem.json").done(function(data){
+           var result = {};
+           result.results = [];
+           $.each(data,function(index,value){
+               result.results.push({id : value.type + "-"+ value.meta , text : value.name})
+           });
+           console.log(result);
+
+           $("#miners").select2({
+               width : "100%",
+               data: result.results,
+               tags: true,
+               escapeMarkup: function(markup) {
+                   return markup;
+               },
+               templateResult:function (data) {
+               if (data.loading) return data.name;
+
+               markup = "<img src='assets/item/" + data.id + ".png' ><span>" + data.text + "</span>" + "<small>" + data.id + "</small>";
+
+               return markup;
+           }
+           })
+
+       });
+
+    });
+</script>
+</body>
+</html>

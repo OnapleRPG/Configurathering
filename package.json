@@ -8,7 +8,7 @@
   },
   "style": [
     "./node_module/bootstrap/dist/css/bootstrap.css",
-    "./node_module/select2-browserify/select2/select2.css"
+    "./node_module/select2/dist/css/select2.css"
   ],
   "author": "",
   "license": "ISC",
@@ -24,6 +24,7 @@
     "browserify": "^16.2.2",
     "jquery": "^3.3.1",
     "parcelify": "^2.2.0",
+    "select2": "^4.0.6-rc.1",
     "select2-browserify": "^3.4.5",
     "vue": "^2.5.16",
     "vueify": "^9.4.1"
