@@ -46,10 +46,13 @@
             window.onbeforeunload = function(){
                 return 'Are you sure you want to leave ?';
             };
+            app.$forceUpdate();
+            setTimeout(function() {
+                $('#dialog-' + app.dialogCount).collapse();
+            });
             $(".tagsfiled").select2(
                 {tags : true}
             );
-            app.$forceUpdate();
         },
         /** Remove a dialog from the configuration */
         removeDialog: function(dialogId) {
@@ -71,7 +74,9 @@
             dialog.pages.push({'id': dialog.pageCount, 'buttonCount': 0, 'text': ''});
             app.$forceUpdate();
             // Tab switch not working dynamically ! Didn't the tab appear yet ?
-            $('#page-' + app.dialog + '-link').tab('show');
+            setTimeout(function() {
+                $('#dialog-' + dialog.id + '-page-' + dialog.pageCount + '-link').tab('show');
+            });
         },
         /** Remove a page from the dialog */
         removePage: function(dialogId, pageId) {
