@@ -135,9 +135,12 @@
                 var dialog = app.dialogs[dialogId];
                 var dialogName = dialog.name;
                 json[dialogName] = {};
-                json[dialogName].trigger = dialog.trigger;
-                json[dialogName].objective = dialog.objective;
-                json[dialogName].items = dialog.item;
+                if (dialog.trigger)
+                    json[dialogName].trigger = dialog.trigger;
+                if (dialog.objective)
+                    json[dialogName].objective = dialog.objective;
+                if (dialog.item)
+                    json[dialogName].items = dialog.item;
                 json[dialogName].pages = app.exportPages(dialog.pages);
             }
             return json
