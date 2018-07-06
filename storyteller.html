@@ -133,6 +133,7 @@
                                         <!-- Page tabs -->
                                         <li v-for="page in dialog.pages" class="nav-item">
                                             <a v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-link'" class="nav-link" data-toggle="tab" v-bind:href="'#dialog-' + dialog.id + '-page-' + page.id" role="tab" v-bind:aria-controls="'dialog-' + dialog.id + '-page-' + page.id" aria-selected="true">Page {{ page.id }}</a>
+
                                         </li>
                                         <!-- ----- -->
                                         <li class="nav-item border-bottom-0"><a onclick="event.preventDefault();" v-on:click="addPage(dialog.id)" class="nav-link" href="#" id="addpageButton">+</a></li>

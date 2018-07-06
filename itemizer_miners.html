@@ -43,7 +43,7 @@
            tokenDelimiter:[","],
            width: "100%"
        });
-       $.getJSON("blockitem.json").done(function(data){
+       $.getJSON("assets/blockitem.json").done(function(data){
            var result = {};
            result.results = [];
            $.each(data,function(index,value){
@@ -54,7 +54,6 @@
            $("#miners").select2({
                width : "100%",
                data: result.results,
-               tags: true,
                escapeMarkup: function(markup) {
                    return markup;
                },

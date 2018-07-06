@@ -1,0 +1,138 @@
+[
+  {
+    "text": "Protection",
+    "id": "minecraft:protection"
+  },
+  {
+    "text": "Fire Protection",
+    "id": "minecraft:fire_protection"
+  },
+  {
+    "text": "Feather Falling",
+    "id": "minecraft:feather_falling"
+  },
+  {
+    "text": "Blast Protection",
+    "id": "minecraft:blast_protection"
+  },
+  {
+    "text": "Projectile Protection",
+    "id": "minecraft:projectile_protection"
+  },
+  {
+    "text": "Respiration",
+    "id": "minecraft:respiration"
+  },
+  {
+    "text": "Aqua Affinity",
+    "id": "minecraft:aqua_affinity"
+  },
+  {
+    "text": "Thorns",
+    "id": "minecraft:thorns"
+  },
+  {
+    "text": "Depth Strider",
+    "id": "minecraft:depth_strider"
+  },
+  {
+    "text": "Frost Walker",
+    "id": "minecraft:frost_walker"
+  },
+  {
+    "text": "Curse of Binding",
+    "id": "minecraft:binding_curse"
+  },
+  {
+    "text": "Sharpness",
+    "id": "minecraft:sharpness"
+  },
+  {
+    "text": "Smite",
+    "id": "minecraft:smite"
+  },
+  {
+    "text": "Bane of Arthropods",
+    "id": "minecraft:bane_of_arthropods"
+  },
+  {
+    "text": "Knockback",
+    "id": "minecraft:knockback"
+  },
+  {
+    "text": "Fire Aspect",
+    "id": "minecraft:fire_aspect"
+  },
+  {
+    "text": "Looting",
+    "id": "minecraft:looting"
+  },
+  {
+    "text": "Sweeping Edge",
+    "id": "minecraft:sweeping"
+  },
+  {
+    "text": "Efficiency",
+    "id": "minecraft:efficiency"
+  },
+  {
+    "text": "Silk Touch",
+    "id": "minecraft:silk_touch"
+  },
+  {
+    "text": "Unbreaking",
+    "id": "JE: minecraft:unbreaking\nBE: minecraft:durability"
+  },
+  {
+    "text": "Fortune",
+    "id": "minecraft:fortune"
+  },
+  {
+    "text": "Power",
+    "id": "minecraft:power"
+  },
+  {
+    "text": "Punch",
+    "id": "minecraft:punch"
+  },
+  {
+    "text": "Flame",
+    "id": "minecraft:flame"
+  },
+  {
+    "text": "Infinity",
+    "id": "minecraft:infinity"
+  },
+  {
+    "text": "Luck of the Sea",
+    "id": "minecraft:luck_of_the_sea"
+  },
+  {
+    "text": "Lure",
+    "id": "minecraft:lure"
+  },
+  {
+    "text": "Loyalty",
+    "id": "minecraft:loyalty"
+  },
+  {
+    "text": "Impaling",
+    "id": "minecraft:impaling"
+  },
+  {
+    "text": "Riptide",
+    "id": "minecraft:riptide"
+  },
+  {
+    "text": "Channeling",
+    "id": "minecraft:channeling"
+  },
+  {
+    "text": "Mending",
+    "id": "minecraft:mending"
+  },
+  {
+    "text": "Curse of Vanishing",
+    "id": "minecraft:vanishing_curse"
+  }
+]

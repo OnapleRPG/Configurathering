@@ -8,136 +8,286 @@
               integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
               crossorigin="anonymous">
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-                crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-                integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-                crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <script src="bundle.js"></script>
+        <link rel="stylesheet" href="bundle.css">
+        <script src="node_modules/select2/dist/js/select2.full.min.js"></script>
+        <link rel="stylesheet" href="node_modules/select2/dist/css/select2.min.css">
+        <link rel="stylesheet" href="node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+        <link rel="stylesheet" href="node_modules/json-browse/json-browse/jquery.json-browse.css">
 
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-                integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-                crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"
-                integrity="sha256-l+jZldmOASkIPelan4NKyAFD+oGNqPulrVQwsjxuCXc=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tokenfield/0.12.0/bootstrap-tokenfield.min.js"
-                integrity="sha256-jdwX0QzXB7z7Xc7Vz0ovtIHWO5qIZWg0aLcGv44JDgE=" crossorigin="anonymous"></script>
     </head>
     <title>Item configuration page</title>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Item Configuration</h3>
+<div id="container">
+
+    <!-- Export modal dialog -->
+    <div class="modal fade" id="export-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export dialogs data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <div class="form-group row">
-                        <label for="item" class="col-sm-2 col-form-label">Item :<span class="text-danger">*</span>
-                        </label>
-                        <div class='col-sm-2'>
-                            <input type="text" class="form-control" name="item" id="item">
-                            <small id="itemHelp" class="form-text text-muted">Necessary items to enable the dialog.
-                            </small>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="base" class="col-form-Label">Object base : <span
-                                        class="text-danger">*</span></label>
-                                <div>
-                                    <input type="text" id="base" class="form-control" name="type">
-                                    <small id="baseHelp" class=" form-text text-muted">Item basis for your
-                                        customisation
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="name" class=" col-form-Label">Custom name : <span
-                                        class="text-danger">*</span></label>
-                                <div>
-                                    <input type="text" id="name" class="form-control" name="type">
-                                    <small id="nameHelp" class=" form-text text-muted">Item basis for your
-                                        customisation
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group row"><label for="lore" class="col-sm-4 col-form-label!div">Lore : </label>
-                        <div class="col-sm-8">
-                            <textarea name="lore" id="lore" cols="30" rows="4" class="form-control"></textarea>
-                            <small id="loreHelp" class="form-text text-muted">Your item could have a wonderful story
-                            </small>
-                        </div>
-                    </div>
+                <div class="modal-body">
+                            <pre id="export-area" class="json-body">
 
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="">durability</span>
-                            </div>
-                            <input type="number" class="form-control">
-                            <div class="input-group-append">
-                            <span class="input-group-text">/</span>
-                            <input type="number" class="form-control">
-
-                                <div class="input-group-text">
-                                    <input type="checkbox" name="unbreakable" id="unbreakable" data-toggle="tooltip"
-                                           data-placement="top" data-text="Unbreakable ?"
-                                           aria-label="Checkbox for following text input">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <div class="form-group">
-                            <label for="miners">Miners</label>
-                            <div>
-                                <select id="miners" class="form-control" multiple></select>
-                                <small class="form-text text-muted">List miners associated to your object</small>
-                            </div>
-                        </div>
-                    <label>Enchants</label>
-                    <div class="card m-2">
-                        <div class="card-body"></div>
-                        <div class=""card-footer>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                    </div>
-                                    <select class="custom-select" id="inputGroupSelect01">
-                                        <option selected>Choose...</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                    </select>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-
-
+                            </pre>
                 </div>
             </div>
         </div>
     </div>
+    <!-- ----- -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Itemizer Item</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-success" v-on:click="addItem()" href="#">Ajouter un item </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" v-on:click="exportJSON()">Exporter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">importer</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div id="itemlist" class="accordion">
+                    <div class="card" v-for="item in items">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <button class="btn btn-link" type="button" data-toggle="collapse"
+                                        v-bind:data-target="'#collapse'+item.id" aria-expanded="true"
+                                        v-bind:aria-controls="'collapse'+item.id">
+                                    item # {{item.id}}
+                                </button>
+                            </h5>
+                        </div>
+                        <div v-bind:id="'collapse'+item.id" class="collapse show"
+                             v-bind:aria-labelledby="'heading'+item.id"
+                             data-parent="#itemlist">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label v-bind:for="'item'+item.id" class="col-sm-2 col-form-label">Item :<span
+                                            class="text-danger">*</span>
+                                    </label>
+                                    <div class='col-sm-2'>
+                                        <input class="form-control" v-model="item.id" name="item" id="item" >
+
+                                        </input>
+                                        <small id="itemHelp" class="form-text text-muted">item base
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label v-bind:for="'base'+item.id" class="col-form-Label">Object base : <span
+                                                    class="text-danger">*</span></label>
+                                            <div>
+                                                <select v-bind:id="'base' + item.id" v-model="item.type" class="form-control"
+                                                        name="type">
+                                                    <option v-for="option in baselist" v-bind:value="option.id">{{option.text}}</option>
+                                                </select>
+                                                <small id="baseHelp" class=" form-text text-muted">Item basis for your
+                                                    customisation
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label for="name" class=" col-form-Label">Custom name : <span
+                                                    class="text-danger">*</span></label>
+                                            <div>
+                                                <input type="text" id="name" v-model="item.name" class="form-control"
+                                                       name="type">
+                                                <small id="nameHelp" class=" form-text text-muted">Item basis for your
+                                                    customisation
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row"><label for="lore" class="col-sm-2 col-form-label!div">Lore
+                                    : </label>
+                                    <div class="col-sm-10">
+                                        <textarea name="lore" id="lore" cols="30" rows="2"
+                                                  class="form-control" v-model="item.lore"></textarea>
+                                        <small id="loreHelp" class="form-text text-muted">Your item could have a
+                                            wonderful story
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">durability</span>
+                                        </div>
+                                        <input type="number" v-model="item.durability" class="form-control">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Unbreakable</span>
+
+
+                                            <div class="input-group-text">
+                                                <input type="checkbox" name="unbreakable" v-model="item.unbreakable"
+                                                       id="unbreakable"
+                                                       aria-label="Checkbox for following text input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="miners">Miners</label>
+                                    <div>
+                                        <select id="miners" class="form-control" multiple></select>
+                                        <small class="form-text text-muted">List miners associated to your object
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Enchant section-->
+                                <div class="card m-2">
+                                    <div class="card-header bg-dark text-light">
+                                        <h5 class="card-title">Enchants</h5>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li v-for="enchant in item.enchants" class="list-group-item">
+                                            {{enchant.name}} - <small>{{enchant.level}}</small> <button type="button" class="close" v-on:click="deleteEnchant(item.id,enchant.id)">&times;</button>
+                                        </li>
+                                    </ul>
+
+                                    <div class="card-footer">
+                                        <div class="form-group m-1">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text">Enchantement</label>
+                                                </div>
+
+                                                <select class="custom-select" v-bind:id="'enchantSelect'+item.id">
+                                                    <option v-for="option in enchantList" v-bind:value="option.id">
+                                                        {{option.text}}
+                                                    </option>
+                                                </select>
+                                                <input class="form-control" v-bind:id="'enchantLevel'+item.id"
+                                                       type="number">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-dark"
+                                                            v-on:click="addEnchant(item.id)">
+                                                        ajouter
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <small class="form-text text-muted">Indiquez l'enchantement concerné ainsi
+                                                que le niveau
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--End enchant section-->
+
+                                <!-- Attribute Modifier section-->
+                                <h5>Attribute modifier</h5>
+                                <div class="card">
+
+                                    <div class="card-header">
+                                        <ul class="nav nav-tab card-header-tabs" v-bind:id="'item'+item.id+'AttributeList'"
+                                            role="tablist">
+                                            <li v-for="attribute in item.attributes" class="nav-item">
+                                                <a class="nav-link" v-bind:id="'item'+item.id+'Attribute'+attribute.id"
+                                                   data-toggle="tab" v-bind:href="'#attribute'+attribute.id" role="tab"
+                                                   v-bind:aria-controls="'attribute'+attribute.id"
+                                                   aria-selected="false">Modifier - {{attribute.type}}</a>
+
+                                            </li>
+                                            <li class="nav-item"><button type="button" class="btn btn-success" id="attribute-link"
+                                                                         v-on:click="addModifier(item.id)" href="#">+</button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" v-bind:id="'item'+item.id+'AttributeContent'">
+                                            <div v-for="attribute in item.attributes" class="tab-pane fade"
+                                                 v-bind:id="'attribute'+attribute.id" role="tabpanel"
+                                                 aria-labelledby="profile-tab">
+                                                <button type="button" class="close" v-on:click="deleteAttribute(item.id,attribute.id)">&times;</button>
+                                                <div class="form-group">
+                                                <label>Modifiers </label>
+                                                    <div>
+                                                        <select v-model="attribute.type" class="form-control">
+                                                            <option v-for="option in modifiersList"  >{{option}}</option>
+                                                        </select>
+                                                        <small></small>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Slot</label>
+                                                    <div>
+                                                        <select class="form-control" v-model="attribute.slot">
+                                                            <option v-for="option in slots">{{option}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Operation</label>
+                                                    <div>
+                                                        <select class="form-control" v-model="attribute.operation">
+                                                            <option value="0">Addition</option>
+                                                            <option value="1">% additive</option>
+                                                            <option value="2">% multiplicative</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group"><label>Amount</label>
+                                                    <div><input type="number" v-model="attribute.amount" class="form-control" step="0.01">
+                                                        <small></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
+<script src="itemizer_item.js"></script>
 <script>
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
+
         $("#miners").select2({
             tags: true,
             tokenSeparators: [',', ' ']
-        })
+        });
+        /*  $.getJSON("assets/enchants.json").done(function(data){
+              $("#enchantSelect").select2({
+                  data : data,
+                  theme:"bootstrap4",
+                  width : "50%"
+              })
+          })*/
+
     })
 </script>
 </body>
