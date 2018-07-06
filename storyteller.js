@@ -46,10 +46,13 @@
             window.onbeforeunload = function(){
                 return 'Are you sure you want to leave ?';
             };
+            app.$forceUpdate();
+            setTimeout(function() {
+                $('#dialog-' + app.dialogCount).collapse();
+            });
             $(".tagsfiled").select2(
                 {tags : true}
             );
-            app.$forceUpdate();
         },
         /** Remove a dialog from the configuration */
         removeDialog: function(dialogId) {
@@ -71,7 +74,9 @@
             dialog.pages.push({'id': dialog.pageCount, 'buttonCount': 0, 'text': ''});
             app.$forceUpdate();
             // Tab switch not working dynamically ! Didn't the tab appear yet ?
-            $('#page-' + app.dialog + '-link').tab('show');
+            setTimeout(function() {
+                $('#dialog-' + dialog.id + '-page-' + dialog.pageCount + '-link').tab('show');
+            });
         },
         /** Remove a page from the dialog */
         removePage: function(dialogId, pageId) {
@@ -91,7 +96,9 @@
             page.buttons.push({'id': page.buttonCount, 'text': ''});
             app.$forceUpdate();
             // Button collapse not working right after added. Seems to be the same problem as for the tab.
-            $('#page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
+            setTimeout(function() {
+                $('#dialog-' + dialogId + '-page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
+            });
         },
         /** Remove a button from the page */
         removeButton: function(dialogId, pageId, buttonId) {
@@ -130,9 +137,12 @@
                 var dialog = app.dialogs[dialogId];
                 var dialogName = dialog.name;
                 json[dialogName] = {};
-                json[dialogName].trigger = dialog.trigger;
-                json[dialogName].objective = dialog.objective;
-                json[dialogName].items = dialog.item;
+                if (dialog.trigger)
+                    json[dialogName].trigger = dialog.trigger;
+                if (dialog.objective)
+                    json[dialogName].objective = dialog.objective;
+                if (dialog.item)
+                    json[dialogName].items = dialog.item;
                 json[dialogName].pages = app.exportPages(dialog.pages);
             }
             return json
