@@ -41,6 +41,8 @@
     </div>
     <!-- ----- -->
 
+
+    <!-- # NAV Section # -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Itemizer Item</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -50,7 +52,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link btn btn-outline-success" v-on:click="addItem()" href="#">Ajouter un item </a>
+                    <a class="nav-link btn btn-primary" v-on:click="addItem()" href="#">Ajouter un élément </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" v-on:click="exportJSON()">Exporter</a>
@@ -60,8 +62,40 @@
                 </li>
 
             </ul>
+
         </div>
+        <ul class="nav justify-content-end">
+            <li class="nav-item dropdown ml-1">
+                <a class="nav-link dropdown-toggle btn btn-outline-primary" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Itemizer</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="itemizer_item.html">Items</a>
+                    <a class="dropdown-item" href="itemizer_miners.html">Miners</a>
+                    <a class="dropdown-item" href="#">Pools</a>
+                    <a class="dropdown-item" href="#">Crafts</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-1">
+                <a class="nav-link dropdown-toggle btn btn-outline-danger" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Brawlator</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Monster</a>
+                    <a class="dropdown-item" href="#">Spawner</a>
+                    <a class="dropdown-item" href="#">Loot table</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-1">
+                <a class="nav-link dropdown-toggle btn btn-outline-success" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Harvester</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Harvestables</a>
+                    <a class="dropdown-item" href="#">Loots</a>
+                </div>
+            </li>
+            <li class="nav-item ml-1">
+                <a class="nav-link btn btn-outline-warning" href="storyteller.html">Storyteller</a>
+            </li>
+        </ul>
     </nav>
+    <!-- # End NAV Section -->
+
     <div class="container">
         <div class="row">
             <div class="col-12">
