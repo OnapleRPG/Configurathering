@@ -96,7 +96,9 @@
             page.buttons.push({'id': page.buttonCount, 'text': ''});
             app.$forceUpdate();
             // Button collapse not working right after added. Seems to be the same problem as for the tab.
-            $('#page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
+            setTimeout(function() {
+                $('#dialog-' + dialogId + '-page-' + pageId + '-button-' + page.buttonCount + '-collapse').collapse();
+            });
         },
         /** Remove a button from the page */
         removeButton: function(dialogId, pageId, buttonId) {
