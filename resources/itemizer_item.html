@@ -65,7 +65,7 @@
             </ul>
         </div>
     </nav>
-    <div class="container">
+    <div class="container border rounded border-light p-2 mt-3">
         <div class="row">
             <div class="col-12">
                 <div id="itemlist" class="accordion">
@@ -75,7 +75,7 @@
                                 <button class="btn btn-link" type="button" data-toggle="collapse"
                                         v-bind:data-target="'#collapse'+item.id" aria-expanded="true"
                                         v-bind:aria-controls="'collapse'+item.id">
-                                    item # {{item.id}}
+                                    Item #{{item.id}}
                                 </button>
                             </h5>
                         </div>
@@ -91,7 +91,7 @@
                                         <input class="form-control" v-model="item.id" name="item" id="item" >
 
                                         </input>
-                                        <small id="itemHelp" class="form-text text-muted">item base
+                                        <small id="itemHelp" class="form-text text-muted">Item unique identifier
                                         </small>
                                     </div>
                                 </div>
@@ -118,8 +118,7 @@
                                             <div>
                                                 <input type="text" id="name" v-model="item.name" class="form-control"
                                                        name="type">
-                                                <small id="nameHelp" class=" form-text text-muted">Item basis for your
-                                                    customisation
+                                                <small id="nameHelp" class=" form-text text-muted">New name of the item
                                                 </small>
                                             </div>
                                         </div>
@@ -165,12 +164,13 @@
 
                                 <!-- Enchant section-->
                                 <div class="card m-2">
-                                    <div class="card-header bg-dark text-light">
+                                    <div class="card-header">
                                         <h5 class="card-title">Enchants</h5>
                                     </div>
                                     <ul class="list-group list-group-flush">
                                         <li v-for="enchant in item.enchants" class="list-group-item">
-                                            {{enchant.name}} - <small>{{enchant.level}}</small> <button type="button" class="close" v-on:click="deleteEnchant(item.id,enchant.id)">&times;</button>
+                                            <span>{{enchant.name}} - <small>{{enchant.level}}</small></span>
+                                            <button type="button" class="close" v-on:click="deleteEnchant(item.id,enchant.id)">&times;</button>
                                         </li>
                                     </ul>
 
@@ -178,7 +178,7 @@
                                         <div class="form-group m-1">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <label class="input-group-text">Enchantement</label>
+                                                    <label class="input-group-text">Enchant</label>
                                                 </div>
 
                                                 <select class="custom-select" v-bind:id="'enchantSelect'+item.id">
@@ -189,15 +189,13 @@
                                                 <input class="form-control" v-bind:id="'enchantLevel'+item.id"
                                                        type="number">
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-dark"
+                                                    <button type="button" class="btn btn-secondary"
                                                             v-on:click="addEnchant(item.id)">
                                                         ajouter
                                                     </button>
                                                 </div>
                                             </div>
-                                            <small class="form-text text-muted">Indiquez l'enchantement concerné ainsi
-                                                que le niveau
-                                            </small>
+                                            <small class="form-text text-muted">Specify the enchant and its level</small>
                                         </div>
                                     </div>
                                 </div>
@@ -208,17 +206,17 @@
                                 <div class="card">
 
                                     <div class="card-header">
-                                        <ul class="nav nav-tab card-header-tabs" v-bind:id="'item'+item.id+'AttributeList'"
+                                        <ul class="nav nav-tabs card-header-tabs" v-bind:id="'item'+item.id+'AttributeList'"
                                             role="tablist">
                                             <li v-for="attribute in item.attributes" class="nav-item">
                                                 <a class="nav-link" v-bind:id="'item'+item.id+'Attribute'+attribute.id"
                                                    data-toggle="tab" v-bind:href="'#attribute'+attribute.id" role="tab"
                                                    v-bind:aria-controls="'attribute'+attribute.id"
-                                                   aria-selected="false">Modifier - {{attribute.type}}</a>
+                                                   aria-selected="false">Edit - {{attribute.type}}</a>
 
                                             </li>
-                                            <li class="nav-item"><button type="button" class="btn btn-success" id="attribute-link"
-                                                                         v-on:click="addModifier(item.id)" href="#">+</button>
+                                            <li class="nav-item border-bottom-0"><a onclick="event.preventDefault();" id="attribute-link" class="nav-link"
+                                                                         v-on:click="addModifier(item.id)" href="#">+</a>
                                             </li>
                                         </ul>
                                     </div>

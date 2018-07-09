@@ -55,9 +55,7 @@ const app = new Vue({
             app.$forceUpdate();
         },
         addItem : function () {
-
             app.itemsCount++;
-
             /*setTimeout(function(){$("#base"+app.itemsCount).select2({
                 data : app.baselist,
                 theme:"bootstrap4",
@@ -74,16 +72,17 @@ const app = new Vue({
                     return markup;
                 }
             })},50);*/
-
-
             app.items.push({id : app.itemsCount,type : '',name:'',lore:'',durability : 0,unbreakable : false,miners : [], enchants : [],attributes : []});
-
             app.$forceUpdate();
         },
         addModifier : function(itemId){
+            let uuid = UUID();
             app.items.find(function (elem) {
                 return elem.id == itemId
-            }).attributes.push({id : UUID(),type : '',slot : '',operation : 0, amount : 0})
+            }).attributes.push({id : uuid,type : '',slot : '',operation : 0, amount : 0})
+            setTimeout(function() {
+                $('#item' + itemId + 'Attribute' + uuid).tab('show');
+            });
         },
         exportJSON : function(){
             let formattedArray = $.map(app.items,function(item){
