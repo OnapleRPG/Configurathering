@@ -252,12 +252,15 @@
 
         /** Update the exported JSON to match the content of the page */
         exportJson: function() {
-            $("#export-area").jsonBrowse(app.exportDialogs(),{withQuotes: true});
+            app.exportedJson = app.exportDialogs();
+            $("#export-area").jsonBrowse(app.exportedJson, {withQuotes: true});
             $(".export-modal").modal("show");
         },
         /** Open the import modal */
         openImportModal: function() {
             app.importedJson = '';
+            $("#import-alert").collapse('hide');
+            $("#import-area").html("");
             $('.import-modal').modal('show');
         },
         /** Update the imported JSON/HOCON to match the content of the file */
@@ -269,14 +272,21 @@
             var reader = new FileReader();
             reader.onload = (function(file) {
                 return function(e) {
-                    app.importedJson = e.target.result;
+                    try {
+                        app.importedJson = JSON.parse(e.target.result);
+                        $("#import-area").jsonBrowse(app.importedJson, {withQuotes: true});
+                    } catch (error) {
+                        $("#import-alert .error-name").text("Unable to parse JSON file");
+                        $("#import-alert .error-content").text(error);
+                        $("#import-alert").collapse('show');
+                    }
                 }
             })(file);
             reader.readAsBinaryString(file);
         },
         /** Try to convert the content that has already been loaded into JSON */
         convertFileContent: function(event) {
-            var importedObject = JSON.parse(app.importedJson)
+            var importedObject = app.importedJson;
             var importedData = app.importDialogs(importedObject);
             app.dialogCount = importedData.length;
             app.dialogs = importedData;

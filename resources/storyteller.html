@@ -44,7 +44,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <pre id="export-area">
+                                <pre id="export-area" class="json-body">
                                 </pre>
                             </div>
                         </div>
@@ -63,9 +63,12 @@
                                 </button>
                             </div>
                             <div class="modal-body">
+                                <div id="import-alert" class="alert alert-danger collapse" role="alert">
+                                    <strong class="error-name"></strong><br/>
+                                    <p class="error-content"></p>
+                                </div>
                                 <span>Import JSON file : <input type="file" id="importFile" name="file" /></span>
-                                <pre class="json-body">
-                                    {{ importedJson }}
+                                <pre id="import-area" class="json-body">
                                 </pre>
                             </div>
                             <div class="modal-footer">
