@@ -252,7 +252,7 @@
 
         /** Update the exported JSON to match the content of the page */
         exportJson: function() {
-            app.exportedJson = JSON.stringify(app.exportDialogs(), null, 4);
+            $("#export-area").jsonBrowse(app.exportDialogs(),{withQuotes: true});
             $(".export-modal").modal("show");
         },
         /** Open the import modal */

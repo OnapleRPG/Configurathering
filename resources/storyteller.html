@@ -2,6 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="../bundle.css">
+        <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
         <script src="../bundle.js"></script>
         <script src="../node_modules/select2/dist/js/select2.full.min.js"></script>
     </head>
@@ -43,10 +44,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <pre>
-                                    <code>
-                                        {{ exportedJson }}
-                                    </code>
+                                <pre id="export-area">
                                 </pre>
                             </div>
                         </div>
@@ -66,10 +64,8 @@
                             </div>
                             <div class="modal-body">
                                 <span>Import JSON file : <input type="file" id="importFile" name="file" /></span>
-                                <pre>
-                                    <code>
-                                        {{ importedJson }}
-                                    </code>
+                                <pre class="json-body">
+                                    {{ importedJson }}
                                 </pre>
                             </div>
                             <div class="modal-footer">
