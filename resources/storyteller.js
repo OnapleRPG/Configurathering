@@ -1,5 +1,5 @@
 ﻿const app = new Vue({
-    el: '.container',
+    el: '#container',
     data: {
         dialogs: [],
         dialogCount: 0,
@@ -251,8 +251,14 @@
 
 
         /** Update the exported JSON to match the content of the page */
-        updateJson: function() {
+        exportJson: function() {
             app.exportedJson = JSON.stringify(app.exportDialogs(), null, 4);
+            $(".export-modal").modal("show");
+        },
+        /** Open the import modal */
+        openImportModal: function() {
+            app.importedJson = '';
+            $('.import-modal').modal('show');
         },
         /** Update the imported JSON/HOCON to match the content of the file */
         importFile: function(event) {
@@ -264,7 +270,6 @@
             reader.onload = (function(file) {
                 return function(e) {
                     app.importedJson = e.target.result;
-                    $('.import-modal').modal('show');
                 }
             })(file);
             reader.readAsBinaryString(file);
