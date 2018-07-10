@@ -27,8 +27,8 @@ const app = new Vue({
     },
     mounted: function () {
         var self = this;
-        $.getJSON("assets/enchants.json").done(function(data){self.enchantList = data});
-        $.getJSON("assets/blockitem.json").done(function(data){
+        $.getJSON("../assets/enchants.json").done(function(data){self.enchantList = data});
+        $.getJSON("../assets/blockitem.json").done(function(data){
             self.baselist =  $.map(data,function(value){
 
                 return ({id : value.text_type , text : value.name})
