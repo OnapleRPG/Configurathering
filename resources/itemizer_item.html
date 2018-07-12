@@ -155,8 +155,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="miners">Miners</label>
-                                    <div>
-                                        <select id="miners" class="form-control" multiple></select>
+                                    <div class="form-group">
+                                        <div v-for="miner in item.miners" class="badge badge-info">
+                                            <span>{{ miner }}&nbsp;</span>
+                                            <span style="cursor: pointer;" v-on:click="console.log('clicked !');" aria-hidden="true">&times;</span>
+                                        </div>
+                                        <br/>
+                                        <div class="input-group">
+                                            <input class="form-control" type="number" v-bind:id="'minerNo'+item.id">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" v-on:click="addMiner(item.id)">
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </div>
                                         <small class="form-text text-muted">List miners associated to your object
                                         </small>
                                     </div>
@@ -191,7 +203,7 @@
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                             v-on:click="addEnchant(item.id)">
-                                                        ajouter
+                                                        Add
                                                     </button>
                                                 </div>
                                             </div>

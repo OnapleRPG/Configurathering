@@ -60,19 +60,22 @@ const app = new Vue({
                 data : app.baselist,
                 theme:"bootstrap4",
                 width : "100%",
-
                 escapeMarkup: function(markup) {
                     return markup;
                 },
                 templateResult:function (data) {
                     if (data.loading) return data.name;
-
                     markup = "<img src='assets/item/" + data.img + ".png' ><span>" + data.text + "</span>" + "<small>" + data.img + "</small>";
-
                     return markup;
                 }
             })},50);*/
             app.items.push({id : app.itemsCount,type : '',name:'',lore:'',durability : 0,unbreakable : false,miners : [], enchants : [],attributes : []});
+            app.$forceUpdate();
+        },
+        addMiner: function(itemId) {
+            var miner = $("#minerNo"+itemId).val();
+            console.log(miner);
+            app.items.find(function(elem) {return elem.id == itemId}).miners.push(miner);
             app.$forceUpdate();
         },
         addModifier : function(itemId){
