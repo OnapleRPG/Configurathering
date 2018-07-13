@@ -47,11 +47,13 @@ const app = new Vue({
             app.$forceUpdate();
         },
         deleteEnchant: function (itemId,enchantId) {
-            app.items.find(function(elem) {return elem.id == itemId}).enchants.splice(function(elem){ elem.id != enchantId},1);
+            var enchants = app.items.find(function(elem) {return elem.id == itemId}).enchants;
+            app.items.find(function(elem) {return elem.id == itemId}).enchants = enchants.filter(function(value) { return value.id != enchantId});
             app.$forceUpdate();
         },
         deleteAttribute: function(itemId,attributeId){
-            app.items.find(function(elem) {return elem.id == itemId}).attributes.splice(function(elem){ elem.id != attributeId},1);
+            var attributes = app.items.find(function(elem) {return elem.id == itemId}).attributes;
+            app.items.find(function(elem) {return elem.id == itemId}).attributes = attributes.filter(function(value) { return value.id != attributeId;});
             app.$forceUpdate();
         },
         addItem : function () {
@@ -74,8 +76,12 @@ const app = new Vue({
         },
         addMiner: function(itemId) {
             var miner = $("#minerNo"+itemId).val();
-            console.log(miner);
             app.items.find(function(elem) {return elem.id == itemId}).miners.push(miner);
+            app.$forceUpdate();
+        },
+        removeMiner: function(itemId, miner) {
+            var miners = app.items.find(function(elem) {return elem.id == itemId;}).miners;
+            miners.splice(miners.indexOf(miner), 1);
             app.$forceUpdate();
         },
         addModifier : function(itemId){
