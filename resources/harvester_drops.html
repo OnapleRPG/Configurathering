@@ -1,0 +1,170 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Configurathering - Harvester drops</title>
+        <link rel="stylesheet" href="../bundle.css">
+        <script src="../bundle.js"></script>
+    </head>
+    <body>
+        <div id="container">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="../index.html">Configurathering</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Harvester drops&nbsp;</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-success" v-on:click="addDrop()" href="#">Add a drop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-on:click="exportJson()">Export</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-on:click="openImportModal()">Import</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="container border rounded border-light p-2 mt-3">
+                <!-- Export modal dialog -->
+                <div class="modal fade export-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Export drops data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <pre id="export-area" class="json-body">
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <!-- Import modal dialog -->
+                <div class="modal fade import-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Import drops data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="import-alert" class="alert alert-danger collapse" role="alert">
+                                    <strong class="error-name"></strong><br/>
+                                    <p class="error-content"></p>
+                                </div>
+                                <span>Import JSON file : <input type="file" id="importFile" name="file" /></span>
+                                <pre id="import-area" class="json-body">
+                                </pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button v-on:click="convertFileContent()" type="button" class="btn btn-primary">Import data</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <ul class="list list-group mt-4">
+
+                    <!-- Drop -->
+                    <li v-for="drop in drops" class="list-group-item p-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#drop-' + drop.id" aria-expanded="true" v-bind:aria-controls="'drop-' + drop.id + '-collapse'">Drop {{ drop.id }} - <i>{{ drop.type }}</i></button>
+                                <button v-on:click="removeDrop(drop.id)" type="button" class="close removebutton" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h5>
+                        </div>
+                        <div v-bind:id="'drop-' + drop.id" class="collapse" v-bind:aria-label="'drop-' + drop.id + '-collapse'">
+                            <div class="card-body">
+
+                                <!-- Block type -->
+                                <div class="form-group row">
+                                    <label for="index" class="col-sm-2 col-form-label">Type<span class="text-danger">*</span> :</label>
+                                    <div class='col-sm-10'>
+                                        <input v-model="drop.type" type="text" name="index" class="form-control" id="index" placeholder="Ex: minecraft:dirt">
+                                        <small id="indexHelp" class="form-text text-muted">The type of the bloc which has been mined.</small>
+                                    </div>
+                                </div>
+                                <!--End Block type-->
+
+                                <!-- Block possible states  -->
+                                <label>Block states :</label>
+                                <div class="card m-2 p-0">
+                                    <ul class="list-group list-group-flush">
+                                        <li v-for="state in drop.states" class="list-group-item">
+                                            <span class="badge badge-info">{{ state.name }}</span> {{ state.value }}
+                                            <button type="button" aria-label="Close" v-on:click="removeState(drop.id, state.id)" class="close"><span aria-hidden="true">×</span></button>
+                                        </li>
+                                    </ul>
+                                    <div class="card-footer border-top-0">
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <input type="text" v-bind:id="'drop-' + drop.id + '-state-name'" class="form-control" placeholder="State name (ex: variant)">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" v-bind:id="'drop-' + drop.id + '-state-value'" class="form-control" placeholder="State value (ex: diorite)">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button class="btn btn-primary" v-on:click="addState(drop.id)">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Block possible states -->
+
+                                <!-- Drop item name -->
+                                <div class="form-group row">
+                                    <label v-bind:for="'drop-' + drop.id + '-item-name'" class="col-sm-2 col-form-label">Item name</label>
+                                    <div class='col-sm-10'>
+                                        <input v-model="drop.itemName" v-bind:name="'drop-' + drop.id + '-item-name'" type="text" class="form-control" placeholder="Ex: minecraft:diamond_sword">
+                                        <small class="form-text text-muted">The name of the item that will drop of the block.</small>
+                                    </div>
+                                </div>
+                                <!-- End Drop item name -->
+
+                                <!-- Drop item reference -->
+                                <div class="form-group row">
+                                    <label v-bind:for="'drop-' + drop.id + '-item-ref'" class="col-sm-2 col-form-label">Item reference</label>
+                                    <div class='col-sm-4'>
+                                        <input v-model="drop.itemRef" v-bind:name="'drop-' + drop.id + '-item-ref'" type="text" class="form-control">
+                                        <small class="form-text text-muted">The reference of an item if Itemizer plugin is available.</small>
+                                    </div>
+                                <!-- End Drop item reference -->
+
+                                <!-- Drop item pool -->
+                                    <label v-bind:for="'drop-' + drop.id + '-item-pool'" class="col-sm-2 col-form-label">Pool reference</label>
+                                    <div class='col-sm-4'>
+                                        <input v-model="drop.itemPool" v-bind:name="'drop-' + drop.id + '-item-pool'" type="text" class="form-control">
+                                        <small class="form-text text-muted">The reference of the item pool if Itemizer plugin is available.</small>
+                                    </div>
+                                </div>
+                                <!-- End Drop item pool -->
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- ----- -->
+
+                </ul>
+            </div>
+        </div>
+        <script src="harvester_drops.js"></script>
+    </body>
+</html>
