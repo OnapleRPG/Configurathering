@@ -169,13 +169,13 @@
                                                     <div v-for="button in page.buttons" class="card">
                                                         <div class="card-header" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-header'">
                                                             <h5 class="mb-0">
-                                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'" aria-expanded="true" v-bind:aria-controls="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }} - <i>{{ button.text }}</i></button>
+                                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id" aria-expanded="true" v-bind:aria-controls="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }} - <i>{{ button.text }}</i></button>
                                                                 <button v-on:click="removeButton(dialog.id, page.id, button.id)" type="button" class="close removebutton" v-bind:data-page="page.id" v-bind:data-button="button.id" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </h5>
                                                         </div>
-                                                        <div v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'" class="collapse" v-bind:aria-label="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'" v-bind:data-parent="'dialog-' + dialog.id + '-page-' + page.id + '-buttons'">
+                                                        <div v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id" class="collapse" v-bind:aria-label="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'" v-bind:data-parent="'dialog-' + dialog.id + '-page-' + page.id + '-buttons'">
                                                             <div class="card-body">
                                                                 <div class="form-row m-1">
                                                                     <div class="col"><input v-model="button.text" type="text" class="form-control" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-text'" placeholder="Text" /></div>
