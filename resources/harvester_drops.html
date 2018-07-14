@@ -50,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- ----- -->
+                <!-- End export modal -->
 
                 <!-- Import modal dialog -->
                 <div class="modal fade import-modal" tabindex="-1" role="dialog">
@@ -78,10 +78,32 @@
                         </div>
                     </div>
                 </div>
-                <!-- ----- -->
+                <!-- End Import modal-->
+
+                <!-- Default drop list -->
+                <label for="defaultDropInput">Default drops :</label>
+                <div class="card m-2 p-0">
+                    <ul class="list-group list-group-flush">
+                        <li v-for="defaultDrop in defaultDrops" class="list-group-item">
+                            <span>{{ defaultDrop }}</span>
+                            <button type="button" aria-label="Close" v-on:click="removeDefaultDrop(defaultDrop)" class="close"><span aria-hidden="true">×</span></button>
+                        </li>
+                    </ul>
+                    <div class="card-footer border-top-0">
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="text" id="defaultDropInput" class="form-control" placeholder="Block name (ex: minecraft:sand)">
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-primary" v-on:click="addDefaultDrop()">Add</button>
+                            </div>
+                        </div>
+                        <small>Add blocks that are going to drop like their default behavior.</small>
+                    </div>
+                </div>
+                <!-- End Default drop list -->
 
                 <ul class="list list-group mt-4">
-
                     <!-- Drop -->
                     <li v-for="drop in drops" class="list-group-item p-0">
                         <div class="card-header">
@@ -161,7 +183,7 @@
                         </div>
 
                     </li>
-                    <!-- ----- -->
+                    <!-- End Drop -->
 
                 </ul>
             </div>

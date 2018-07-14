@@ -1,6 +1,8 @@
 ﻿const app = new Vue({
     el: '#container',
     data: {
+        defaultDrops: [],
+        defaultDropCount: 0,
         drops: [],
         dropCount: 0,
         exportedJson: "",
@@ -23,6 +25,18 @@
         },
 
 
+        /** Add a drop configured as default behavior */
+        addDefaultDrop: function() {
+            app.defaultDropCount++;
+            app.defaultDrops.push($('#defaultDropInput').val());
+            app.$forceUpdate();
+        },
+        /** Remove a default drop */
+        removeDefaultDrop: function(defaultDrop) {
+            app.defaultDrops = app.defaultDrops.filter(function(element) {
+                return element != defaultDrop;
+            });
+        },
         /** Add a drop to the configuration */
         addDrop: function() {
             app.dropCount++;
@@ -122,6 +136,7 @@
         },
         convertFileContent: function() {
             var dropCount = 0;
+            app.defaultDrops = app.importedJson.default;
             app.drops = $.map(app.importedJson.harvest_items, function(drop) {
                 dropCount++;
                 var formattedDrop = {};
