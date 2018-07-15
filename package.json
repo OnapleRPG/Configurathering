@@ -6,11 +6,6 @@
     "type": "git",
     "url": "git+https://github.com/Ylinor/Configurathering.git"
   },
-  "style": [
-    "./node_module/bootstrap/dist/css/bootstrap.css",
-    "./node_module/select2/dist/css/select2.css",
-    "./node_module/json-browse/json-browse/jquery.json-browse.css"
-  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -18,30 +13,11 @@
   },
   "homepage": "https://github.com/Ylinor/Configurathering#readme",
   "dependencies": {
-    "aliasify": "^2.1.0",
-    "babel-core": "^6.26.3",
-    "babelify": "^8.0.0",
     "bootstrap": "^4.1.1",
-    "browserify": "^16.2.2",
     "jquery": "^3.3.1",
     "json-browse": "^0.2.0",
-    "parcelify": "^2.2.0",
     "select2": "^4.0.6-rc.1",
     "select2-bootstrap4-theme": "^1.0.0",
-    "select2-browserify": "^3.4.5",
-    "vue": "^2.5.16",
-    "vueify": "^9.4.1"
-  },
-  "browserify": {
-    "transform": [
-      "vueify",
-      "babelify",
-      "aliasify"
-    ]
-  },
-  "aliasify": {
-    "aliases": {
-      "vue": "vue/dist/vue.js"
-    }
+    "vue": "^2.5.16"
   }
 }

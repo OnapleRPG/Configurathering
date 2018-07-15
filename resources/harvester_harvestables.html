@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Configurathering - Harvester harvestables</title>
+        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="../node_modules/vue/dist/vue.min.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../node_modules/json-browse/json-browse/jquery.json-browse.js"></script>
+
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
+    </head>
+    <body>
+        <div id="container">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="../index.html">Configurathering</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Harvester harvestables&nbsp;</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-success" v-on:click="addHarvestable()" href="#">Add a harvestable</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-on:click="exportJson()">Export</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-on:click="openImportModal()">Import</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="container border rounded border-light p-2 mt-3">
+                <!-- Export modal dialog -->
+                <div class="modal fade export-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Export harvestables data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <pre id="export-area" class="json-body">
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End export modal -->
+
+                <!-- Import modal dialog -->
+                <div class="modal fade import-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Import harvestables data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="import-alert" class="alert alert-danger collapse" role="alert">
+                                    <strong class="error-name"></strong><br/>
+                                    <p class="error-content"></p>
+                                </div>
+                                <span>Import JSON file : <input type="file" id="importFile" name="file" /></span>
+                                <pre id="import-area" class="json-body">
+                                </pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button v-on:click="convertFileContent()" type="button" class="btn btn-primary">Import data</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Import modal-->
+
+                <ul class="list list-group mt-4">
+                    <!-- Harvestable -->
+                    <li v-for="harvestable in harvestables" class="list-group-item p-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#harvestable-' + harvestable.id" aria-expanded="true" v-bind:aria-controls="'harvestable-' + harvestable.id + '-collapse'">Harvestable {{ harvestable.id }} - <i>{{ harvestable.type }}</i></button>
+                                <button v-on:click="removeHarvestable(harvestable.id)" type="button" class="close removebutton" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h5>
+                        </div>
+                        <div v-bind:id="'harvestable-' + harvestable.id" class="collapse" v-bind:aria-label="'harvestable-' + harvestable.id + '-collapse'">
+                            <div class="card-body">
+
+                                <!-- Block type -->
+                                <div class="form-group row">
+                                    <label for="index" class="col-sm-2 col-form-label">Type<span class="text-danger">*</span> :</label>
+                                    <div class='col-sm-10'>
+                                        <input v-model="harvestable.type" type="text" name="index" class="form-control" placeholder="Ex: minecraft:dirt">
+                                        <small id="indexHelp" class="form-text text-muted">The type of the bloc which has been mined.</small>
+                                    </div>
+                                </div>
+                                <!--End Block type-->
+
+                                <!-- Block possible states  -->
+                                <label>Block states :</label>
+                                <div class="card m-2 p-0">
+                                    <ul class="list-group list-group-flush">
+                                        <li v-for="state in harvestable.states" class="list-group-item">
+                                            <span class="badge badge-info">{{ state.name }}</span> {{ state.value }}
+                                            <button type="button" aria-label="Close" v-on:click="removeState(harvestable.id, state.id)" class="close"><span aria-hidden="true">×</span></button>
+                                        </li>
+                                    </ul>
+                                    <div class="card-footer border-top-0">
+                                        <div class="form-row">
+                                            <div class="col">
+                                                <input type="text" v-bind:id="'harvestable-' + harvestable.id + '-state-name'" class="form-control" placeholder="State name (ex: variant)">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" v-bind:id="'harvestable-' + harvestable.id + '-state-value'" class="form-control" placeholder="State value (ex: diorite)">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button class="btn btn-primary" v-on:click="addState(harvestable.id)">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End Block possible states -->
+
+                                <!-- Harvestable min respawn -->
+                                <div class="form-group row">
+                                    <label v-bind:for="'harvestable-' + harvestable.id + '-min-respawn'" class="col-sm-2 col-form-label">Respawn min. time<span class="text-danger">*</span> :</label>
+                                    <div class='col-sm-4'>
+                                        <input v-model="harvestable.minRespawn" v-bind:name="'harvestable-' + harvestable.id + '-min-respawn'" type="number" class="form-control">
+                                        <small class="form-text text-muted">The minimum time (in minutes) before a block respawn.</small>
+                                    </div>
+                                <!-- End Harvestable min respawn -->
+
+                                <!-- Harvestable max respawn -->
+                                    <label v-bind:for="'harvestable-' + harvestable.id + '-max-respawn'" class="col-sm-2 col-form-label">Respawn max. time<span class="text-danger">*</span> :</label>
+                                    <div class='col-sm-4'>
+                                        <input v-model="harvestable.maxRespawn" v-bind:name="'harvestable-' + harvestable.id + '-max-respawn'" type="number" class="form-control">
+                                        <small class="form-text text-muted">The maximum time (in minutes) before a block respawn.</small>
+                                    </div>
+                                <!-- End Harvestable max respawn -->
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- End Harvestable -->
+
+                </ul>
+            </div>
+        </div>
+        <script src="harvester_harvestables.js"></script>
+    </body>
+</html>

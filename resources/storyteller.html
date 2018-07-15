@@ -1,0 +1,244 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="../node_modules/vue/dist/vue.min.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../node_modules/json-browse/json-browse/jquery.json-browse.js"></script>
+        <script src="../node_modules/select2/dist/js/select2.full.min.js"></script>
+
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
+
+    </head>
+    <body>
+        <div id="container">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="../index.html">Configurathering</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Storyteller dialogs&nbsp;</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-success" v-on:click="addDialog()" href="#">Add a dialog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-on:click="exportJson()">Export</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" v-on:click="openImportModal()">Import</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="container border rounded border-light p-2 mt-3">
+                <!-- Export modal dialog -->
+                <div class="modal fade export-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Export dialogs data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <pre id="export-area" class="json-body">
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <!-- Import modal dialog -->
+                <div class="modal fade import-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Import dialogs data</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="import-alert" class="alert alert-danger collapse" role="alert">
+                                    <strong class="error-name"></strong><br/>
+                                    <p class="error-content"></p>
+                                </div>
+                                <span>Import JSON file : <input type="file" id="importFile" name="file" /></span>
+                                <pre id="import-area" class="json-body">
+                                </pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button v-on:click="convertFileContent()" type="button" class="btn btn-primary">Import data</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ----- -->
+
+                <ul class="list list-group mt-4">
+
+                    <!-- Dialog -->
+                    <li v-for="dialog in dialogs" class="list-group-item p-0">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#dialog-' + dialog.id" aria-expanded="true" v-bind:aria-controls="'dialog-' + dialog.id + '-collapse'">Dialog {{ dialog.id }} - <i>{{ dialog.name }}</i></button>
+                                <button v-on:click="removeDialog(dialog.id)" type="button" class="close removebutton" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </h5>
+                        </div>
+                        <div v-bind:id="'dialog-' + dialog.id" class="collapse" v-bind:aria-label="'dialog-' + dialog.id + '-collapse'">
+                            <div class="card-body">
+                                <!-- Dialog name -->
+                                <div class="form-group row">
+                                    <label for="index" class="col-sm-2 col-form-label">Id :<span class="text-danger">*</span></label>
+                                    <div class='col-sm-10'>
+                                        <input v-model="dialog.name" type="text" name="index" class="form-control" id="index">
+                                        <small id="indexHelp" class="form-text text-muted">The index must be an unique string.</small>
+                                    </div>
+                                </div>
+                                <!-- ----- -->
+
+                                <!-- Dialog appearance conditions -->
+                                <div class="card border mt-3">
+                                    <h5 class="card-header mb-3">
+                                        Conditions
+                                    </h5>
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="trigger" class="col-sm-2 col-form-label">Trigger :</label>
+                                            <div class='col-sm-10'>
+                                                <input v-model="dialog.trigger" class="form-control tagsfield" name="trigger" id="trigger"/>
+                                                <small id="triggerHelp" class="form-text text-muted">NPC names that will be able to trigger the dialog.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="objective" class="col-sm-2 col-form-label">Objectives :</label>
+                                            <div class='col-sm-10'>
+                                                <input v-model="dialog.objective" type="text" class="form-control" name="objective" id="objective">
+                                                <small id="objectiveHelp" class="form-text text-muted">Objectives needed to enable the dialog.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="item" class="col-sm-2 col-form-label">Item :</label>
+                                            <div class='col-sm-5'>
+                                                <input v-model="dialog.item" type="text" class="form-control" name="item" id="item">
+                                                <small id="itemHelp" class="form-text text-muted">Necessary items to enable the dialog.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ----- -->
+
+                                <!-- Page manager -->
+                                <div class="card border mt-3">
+                                    <div class="card-header bg-light">
+                                        <ul class="nav nav-tabs card-header-tabs" id="pageTabs" role="tablist">
+                                            <!-- Page tabs -->
+                                            <li v-for="page in dialog.pages" class="nav-item">
+                                                <a v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-link'" class="nav-link" data-toggle="tab" v-bind:href="'#dialog-' + dialog.id + '-page-' + page.id" role="tab" v-bind:aria-controls="'dialog-' + dialog.id + '-page-' + page.id" aria-selected="true">Page {{ page.id }}</a>
+
+                                            </li>
+                                            <!-- ----- -->
+                                            <li class="nav-item border-bottom-0"><a onclick="event.preventDefault();" v-on:click="addPage(dialog.id)" class="nav-link" href="#" id="addpageButton">+</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" id="page-content">
+
+                                            <!-- Page -->
+                                            <div v-for="page in dialog.pages" class="tab-pane fade show" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id" role="tabpanel" v-bind:aria-labelledby="'dialog-' + dialog.id + '-page-' + page.id + '-tab'">
+                                                <button v-on:click="removePage(dialog.id, page.id)" type="button" class="close removebutton" v-bind:data-page="page.id" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <div class="form-group row">
+                                                    <label v-bind:for="'dialog-' + dialog.id + '-page-' + page.id + '-text'" class="col-sm-2 col-form-label">Text : <span class="text-danger">*</span></label>
+                                                    <div class='col-sm-10'>
+                                                        <textarea v-model="page.text" class="form-control" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-text'"></textarea>
+                                                        <small v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-text-help'" class="form-text text-muted">Text that's going to be displayed on the page.</small>
+                                                    </div>
+                                                </div>
+                                                <div v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-buttons'">
+
+                                                    <!-- Button -->
+                                                    <div v-for="button in page.buttons" class="card">
+                                                        <div class="card-header" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-header'">
+                                                            <h5 class="mb-0">
+                                                                <button type="button" class="btn btn-link" data-toggle="collapse" v-bind:data-target="'#dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id" aria-expanded="true" v-bind:aria-controls="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'">Button {{ button.id }} - <i>{{ button.text }}</i></button>
+                                                                <button v-on:click="removeButton(dialog.id, page.id, button.id)" type="button" class="close removebutton" v-bind:data-page="page.id" v-bind:data-button="button.id" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </h5>
+                                                        </div>
+                                                        <div v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id" class="collapse" v-bind:aria-label="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-collapse'" v-bind:data-parent="'dialog-' + dialog.id + '-page-' + page.id + '-buttons'">
+                                                            <div class="card-body">
+                                                                <div class="form-row m-1">
+                                                                    <div class="col"><input v-model="button.text" type="text" class="form-control" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-text'" placeholder="Text" /></div>
+                                                                </div>
+                                                                <div class="card m-2 p-0">
+
+                                                                    <ul class="list-group list-group-flush" v-bind:id="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-actions'">
+                                                                        <!-- Action -->
+                                                                        <li v-for="action in button.actions" class="list-group-item" data-type="${type}" data-args="${arg}">
+                                                                            <span class="badge badge-info">{{ action.type }}</span>&nbsp;{{ action.arguments }}
+                                                                            <button v-on:click="removeAction(dialog.id, page.id, button.id, action.id)" type="button" class="close removeAction" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </li>
+                                                                        <!-- ----- -->
+                                                                    </ul>
+                                                                    <div class="card-footer border-top-0">
+                                                                        <div class="form-row">
+                                                                            <div class="col">
+                                                                                <select v-model="button.newActionType" v-bind:name="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-type'" class="form-control">
+                                                                                    <option value="OPEN_DIALOG">Open a given dialog</option>
+                                                                                    <option value="EXECUTE_COMMAND">Execute a command</option>
+                                                                                    <option value="GIVE_ITEM">Give an object to the player</option>
+                                                                                    <option value="REMOVE_ITEM">Take an object from the player</option>
+                                                                                    <option value="TELEPORT">Teleport to coordinates</option>
+                                                                                    <option value="SET_OBJECTIVE">Set objective</option>
+                                                                                    <option value="START_KILL_COUNT">Start counting kills for a mob</option>
+                                                                                    <option value="STOP_KILL_COUNT">Stop counting kills for a mob</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="col"><input v-model="button.newActionArguments" type="text" v-bind:name="'dialog-' + dialog.id + '-page-' + page.id + '-button-' + button.id + '-arg'" class="form-control" placeholder="Args" /></div>
+                                                                            <div class="col-auto"><button v-on:click="addAction(dialog.id, page.id, button.id)" type="button" v-bind:data-page="page.id" v-bind:data-button="button.id" class="btn btn-primary addActionbtn">Add action</button></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- ----- -->
+
+                                                </div>
+                                                <button v-on:click="addButton(dialog.id, page.id)" type="button" class="btn btn-info addButtonbtn m-2">Add a button</button>
+                                            </div>
+                                            <!-- ----- -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ----- -->
+                            </div>
+                        </div>
+
+                    </li>
+                    <!-- ----- -->
+
+                </ul>
+            </div>
+        </div>
+        <script src="storyteller.js"></script>
+    </body>
+</html>

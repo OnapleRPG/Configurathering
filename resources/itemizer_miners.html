@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Configuration des miners</title>
-    <script src="bundle.js"></script>
-    <link rel="stylesheet" href="bundle.css">
-    <script src="node_modules/select2/dist/js/select2.full.min.js">
-    </script>
-    <link rel="stylesheet" href="node_modules/select2/dist/css/select2.min.css">
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/vue/dist/vue.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules/json-browse/json-browse/jquery.json-browse.js"></script>
+
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
+    <link rel="stylesheet" href="../node_modules/select2/dist/css/select2.min.css">
 </head>
 <body>
 <div class="container">
@@ -43,7 +47,7 @@
            tokenDelimiter:[","],
            width: "100%"
        });
-       $.getJSON("assets/blockitem.json").done(function(data){
+       $.getJSON("../assets/blockitem.json").done(function(data){
            var result = {};
            result.results = [];
            $.each(data,function(index,value){

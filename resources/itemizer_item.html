@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-              integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
-              crossorigin="anonymous">
 
-        <script src="bundle.js"></script>
-        <link rel="stylesheet" href="bundle.css">
-        <script src="node_modules/select2/dist/js/select2.full.min.js"></script>
-        <link rel="stylesheet" href="node_modules/select2/dist/css/select2.min.css">
-        <link rel="stylesheet" href="node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
-        <link rel="stylesheet" href="node_modules/json-browse/json-browse/jquery.json-browse.css">
+
+        <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="../node_modules/vue/dist/vue.min.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="../node_modules/json-browse/json-browse/jquery.json-browse.js"></script>
+
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
+
+
+        <script src="../node_modules/select2/dist/js/select2.full.min.js"></script>
+        <link rel="stylesheet" href="../node_modules/select2/dist/css/select2.min.css">
+        <link rel="stylesheet" href="../node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
+        <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
 
     </head>
     <title>Item configuration page</title>
@@ -44,13 +49,16 @@
 
     <!-- # NAV Section # -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Itemizer Item</a>
+        <a class="navbar-brand" href="../index.html">Configurathering</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Itemizer Items&nbsp;</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link btn btn-primary" v-on:click="addItem()" href="#">Ajouter un élément </a>
                 </li>
@@ -94,9 +102,13 @@
             </li>
         </ul>
     </nav>
+<<<<<<< HEAD:itemizer_item.html
     <!-- # End NAV Section -->
 
     <div class="container">
+=======
+    <div class="container border rounded border-light p-2 mt-3">
+>>>>>>> 83fa74fa5a4940e0dac5e094399e014e2057bed1:resources/itemizer_item.html
         <div class="row">
             <div class="col-12">
                 <div id="itemlist" class="accordion">
@@ -106,7 +118,7 @@
                                 <button class="btn btn-link" type="button" data-toggle="collapse"
                                         v-bind:data-target="'#collapse'+item.id" aria-expanded="true"
                                         v-bind:aria-controls="'collapse'+item.id">
-                                    item # {{item.id}}
+                                    Item #{{item.id}}
                                 </button>
                             </h5>
                         </div>
@@ -122,7 +134,7 @@
                                         <input class="form-control" v-model="item.id" name="item" id="item" >
 
                                         </input>
-                                        <small id="itemHelp" class="form-text text-muted">item base
+                                        <small id="itemHelp" class="form-text text-muted">Item unique identifier
                                         </small>
                                     </div>
                                 </div>
@@ -149,8 +161,7 @@
                                             <div>
                                                 <input type="text" id="name" v-model="item.name" class="form-control"
                                                        name="type">
-                                                <small id="nameHelp" class=" form-text text-muted">Item basis for your
-                                                    customisation
+                                                <small id="nameHelp" class=" form-text text-muted">New name of the item
                                                 </small>
                                             </div>
                                         </div>
@@ -187,8 +198,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="miners">Miners</label>
-                                    <div>
-                                        <select id="miners" class="form-control" multiple></select>
+                                    <div class="form-group">
+                                        <div v-for="miner in item.miners" class="badge badge-info">
+                                            <span>{{ miner }}&nbsp;</span>
+                                            <span style="cursor: pointer;" v-on:click="removeMiner(item.id, miner);">&times;</span>
+                                        </div>
+                                        <br/>
+                                        <div class="input-group">
+                                            <input class="form-control" type="number" v-bind:id="'minerNo'+item.id">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-secondary" v-on:click="addMiner(item.id)">
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </div>
                                         <small class="form-text text-muted">List miners associated to your object
                                         </small>
                                     </div>
@@ -196,12 +219,13 @@
 
                                 <!-- Enchant section-->
                                 <div class="card m-2">
-                                    <div class="card-header bg-dark text-light">
+                                    <div class="card-header">
                                         <h5 class="card-title">Enchants</h5>
                                     </div>
                                     <ul class="list-group list-group-flush">
                                         <li v-for="enchant in item.enchants" class="list-group-item">
-                                            {{enchant.name}} - <small>{{enchant.level}}</small> <button type="button" class="close" v-on:click="deleteEnchant(item.id,enchant.id)">&times;</button>
+                                            <span>{{enchant.name}} - <small>{{enchant.level}}</small></span>
+                                            <button type="button" class="close" v-on:click="deleteEnchant(item.id,enchant.id)">&times;</button>
                                         </li>
                                     </ul>
 
@@ -209,7 +233,7 @@
                                         <div class="form-group m-1">
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                    <label class="input-group-text">Enchantement</label>
+                                                    <label class="input-group-text">Enchant</label>
                                                 </div>
 
                                                 <select class="custom-select" v-bind:id="'enchantSelect'+item.id">
@@ -220,15 +244,13 @@
                                                 <input class="form-control" v-bind:id="'enchantLevel'+item.id"
                                                        type="number">
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-dark"
+                                                    <button type="button" class="btn btn-secondary"
                                                             v-on:click="addEnchant(item.id)">
-                                                        ajouter
+                                                        Add
                                                     </button>
                                                 </div>
                                             </div>
-                                            <small class="form-text text-muted">Indiquez l'enchantement concerné ainsi
-                                                que le niveau
-                                            </small>
+                                            <small class="form-text text-muted">Specify the enchant and its level</small>
                                         </div>
                                     </div>
                                 </div>
@@ -239,17 +261,17 @@
                                 <div class="card">
 
                                     <div class="card-header">
-                                        <ul class="nav nav-tab card-header-tabs" v-bind:id="'item'+item.id+'AttributeList'"
+                                        <ul class="nav nav-tabs card-header-tabs" v-bind:id="'item'+item.id+'AttributeList'"
                                             role="tablist">
                                             <li v-for="attribute in item.attributes" class="nav-item">
                                                 <a class="nav-link" v-bind:id="'item'+item.id+'Attribute'+attribute.id"
                                                    data-toggle="tab" v-bind:href="'#attribute'+attribute.id" role="tab"
                                                    v-bind:aria-controls="'attribute'+attribute.id"
-                                                   aria-selected="false">Modifier - {{attribute.type}}</a>
+                                                   aria-selected="false">Edit - {{attribute.type}}</a>
 
                                             </li>
-                                            <li class="nav-item"><button type="button" class="btn btn-success" id="attribute-link"
-                                                                         v-on:click="addModifier(item.id)" href="#">+</button>
+                                            <li class="nav-item border-bottom-0"><a onclick="event.preventDefault();" id="attribute-link" class="nav-link"
+                                                                         v-on:click="addModifier(item.id)" href="#">+</a>
                                             </li>
                                         </ul>
                                     </div>
