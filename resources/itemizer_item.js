@@ -5,8 +5,9 @@ const app = new Vue({
         itemsCount: 0,
         exportedJson: "",
         importedJson: "",
-        baselist : "",
+        baseList : [],
         enchantList:[],
+        itemsAdapter : {},
         modifiersList:[
             "generic.maxHealth",
             "generic.followRange",
@@ -29,12 +30,28 @@ const app = new Vue({
         var self = this;
         $.getJSON("../assets/enchants.json").done(function(data){self.enchantList = data});
         $.getJSON("../assets/blockitem.json").done(function(data){
-            self.baselist =  $.map(data,function(value){
-
-                return ({id : value.text_type , text : value.name})
-            });
+            self.baseList = $.map(data, function(value){
+                return value.text_type;
+            })
 
         });
+        self.itemsAdapter = new Bloodhound({
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            // url points to a json file that contains an array of country names, see
+            // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
+            prefetch: {
+                url: '../assets/blockitem.json',
+                filter: function (names) {
+                    return $.map(names, function (name) {
+                        console.log(name);
+                        return {name: name.text_type,img : name.type + '-' + name.meta};
+                    });
+                }
+            }
+        });
+
+
     },
     methods: {
         addEnchant : function(itemId){
@@ -58,19 +75,26 @@ const app = new Vue({
         },
         addItem : function () {
             app.itemsCount++;
-            /*setTimeout(function(){$("#base"+app.itemsCount).select2({
-                data : app.baselist,
-                theme:"bootstrap4",
-                width : "100%",
-                escapeMarkup: function(markup) {
-                    return markup;
+
+            setTimeout(function(){$('#collapse'+app.itemsCount +' .typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
                 },
-                templateResult:function (data) {
-                    if (data.loading) return data.name;
-                    markup = "<img src='assets/item/" + data.img + ".png' ><span>" + data.text + "</span>" + "<small>" + data.img + "</small>";
-                    return markup;
-                }
-            })},50);*/
+                {
+                    name: 'items',
+                    source: app.itemsAdapter,
+                    display:'name',
+
+                    templates: {
+                        empty: [
+                            '<div class="empty-message">',
+                            'Aucun item existe avec ce nom',
+                            '</div>'
+                        ].join('\n'),
+                        suggestion: Handlebars.compile('<div><img src="../assets/item/{{img}}.png"><strong>{{name}}</strong> </div>')
+                    }
+                })},50);
             app.items.push({id : app.itemsCount,type : '',name:'',lore:'',durability : 0,unbreakable : false,miners : [], enchants : [],attributes : []});
             app.$forceUpdate();
         },

@@ -5,20 +5,17 @@
     <head>
         <meta charset="UTF-8">
 
-
         <script src="../node_modules/jquery/dist/jquery.min.js"></script>
         <script src="../node_modules/vue/dist/vue.min.js"></script>
         <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="../node_modules/json-browse/json-browse/jquery.json-browse.js"></script>
+        <script src="../node_modules/typeahead.js/dist/bloodhound.js"></script>
+        <script src="../node_modules/typeahead.js/dist/typeahead.bundle.min.js"></script>
+        <script src="../node_modules/handlebars/dist/handlebars.min.js"></script>
 
-        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
-
-
-        <script src="../node_modules/select2/dist/js/select2.full.min.js"></script>
-        <link rel="stylesheet" href="../node_modules/select2/dist/css/select2.min.css">
-        <link rel="stylesheet" href="../node_modules/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css">
-        <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
+        <link rel="stylesheet" href="../node_modules/typeahead.js-bootstrap4-css/typeaheadjs.css">
 
     </head>
     <title>Item configuration page</title>
@@ -102,13 +99,8 @@
             </li>
         </ul>
     </nav>
-<<<<<<< HEAD:itemizer_item.html
-    <!-- # End NAV Section -->
 
-    <div class="container">
-=======
     <div class="container border rounded border-light p-2 mt-3">
->>>>>>> 83fa74fa5a4940e0dac5e094399e014e2057bed1:resources/itemizer_item.html
         <div class="row">
             <div class="col-12">
                 <div id="itemlist" class="accordion">
@@ -144,10 +136,8 @@
                                             <label v-bind:for="'base'+item.id" class="col-form-Label">Object base : <span
                                                     class="text-danger">*</span></label>
                                             <div>
-                                                <select v-bind:id="'base' + item.id" v-model="item.type" class="form-control"
+                                                <input v-bind:id="'base' + item.id" v-model="item.type" class="form-control typeahead"
                                                         name="type">
-                                                    <option v-for="option in baselist" v-bind:value="option.id">{{option.text}}</option>
-                                                </select>
                                                 <small id="baseHelp" class=" form-text text-muted">Item basis for your
                                                     customisation
                                                 </small>
@@ -329,22 +319,5 @@
     </div>
 </div>
 <script src="itemizer_item.js"></script>
-<script>
-    $(function () {
-
-        $("#miners").select2({
-            tags: true,
-            tokenSeparators: [',', ' ']
-        });
-        /*  $.getJSON("assets/enchants.json").done(function(data){
-              $("#enchantSelect").select2({
-                  data : data,
-                  theme:"bootstrap4",
-                  width : "50%"
-              })
-          })*/
-
-    })
-</script>
 </body>
 </html>
