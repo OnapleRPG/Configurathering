@@ -117,6 +117,48 @@ const app = new Vue({
                 $('#item' + itemId + 'Attribute' + uuid).tab('show');
             });
         },
+        importFile: function(event) {
+            if (event.target.files.length == 0) {
+                return;
+            }
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = (function(file) {
+                return function(e) {
+                    try {
+                        app.importedJson = JSON.parse(e.target.result);
+                        $("#import-area").jsonBrowse(app.importedJson, {withQuotes: true});
+                    } catch (error) {
+                        $("#import-alert .error-name").text("Unable to parse JSON file");
+                        $("#import-alert .error-content").text(error);
+                        $("#import-alert").collapse('show');
+                    }
+                }
+            })(file);
+            reader.readAsBinaryString(file);
+        },
+        convertFileContent: function(event) {
+            var importedObject = app.importedJson;
+            var importedData = app.importItems(importedObject);
+            app.itemsCount = importedData.length;
+            app.items = importedData;
+            $('.modal').modal('hide');
+            app.$forceUpdate();
+        },
+        
+        importItems: function (importedObject) {
+            console.log(importedObject);
+            $.map(importedObject,function(elem){
+                if(elem.enchants === undefined)
+                    elem.enchants = [];
+                if(elem.attributes === undefined)
+                    elem.attributes = [];
+                if(elem.miners === undefined)
+                    elem.miners = [];
+               return elem;
+            });
+            return importedObject;
+        },
         exportJSON : function(){
             let formattedArray = $.map(app.items,function(item){
                let elem = {};
@@ -149,8 +191,19 @@ const app = new Vue({
             });
             $("#export-area").jsonBrowse(formattedArray,{withQuotes: true});
             $("#export-modal").modal("show");
+        },
+        importModal : function(){
+
+                app.importedJson = '';
+                $("#import-alert").collapse('hide');
+                $("#import-area").html("");
+                $("#importModal").modal("show")
         }
     }
+});
+
+$(function() {
+    document.getElementById('importFile').addEventListener('change', app.importFile, false);
 });
 
 function UUID() {

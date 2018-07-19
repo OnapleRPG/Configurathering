@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
+   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="../node_modules/typeahead.js/dist/bloodhound.js"></script>
+    <script src="../node_modules/typeahead.js/dist/typeahead.bundle.min.js"></script>
+
+    <script src="../node_modules/handlebars/dist/handlebars.min.js"></script>
+
+    <link rel="stylesheet" href="../node_modules/typeahead.js-bootstrap4-css/typeaheadjs.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+<input type="text" class="form-control typeahead">
+
+<script>
+
+    var items = new Bloodhound({
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        // url points to a json file that contains an array of country names, see
+        // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
+        prefetch: {
+            url: '../assets/blockitem.json',
+            filter: function (names) {
+                return $.map(names, function (name) {
+                    console.log(name);
+                    return {name: name.text_type,img : name.type + '-' + name.meta};
+                });
+            }
+        }
+    });
+
+    // passing in `null` for the `options` arguments will result in the default
+    // options being used
+    $('.typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'items',
+            source: items,
+            display:'name',
+
+            templates: {
+                empty: [
+                    '<div class="empty-message">',
+                    'Aucun item existe avec ce nom',
+                    '</div>'
+                ].join('\n'),
+                suggestion: Handlebars.compile('<div><img src="../assets/item/{{img}}.png"><strong>{{name}}</strong> </div>')
+            }
+        });
+
+</script>
+</body>
+</html>
