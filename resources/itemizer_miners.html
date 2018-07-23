@@ -8,71 +8,230 @@
     <script src="../node_modules/vue/dist/vue.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/json-browse/json-browse/jquery.json-browse.js"></script>
+    <script src="../node_modules/typeahead.js/dist/bloodhound.js"></script>
+    <script src="../node_modules/typeahead.js/dist/typeahead.bundle.min.js"></script>
+    <script src="../node_modules/handlebars/dist/handlebars.min.js"></script>
 
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/json-browse/json-browse/jquery.json-browse.css">
-    <link rel="stylesheet" href="../node_modules/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="../node_modules/typeahead.js-bootstrap4-css/typeaheadjs.css">
+
+    <style>
+        .input-group span.twitter-typeahead {
+            flex: 1 1 auto;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto;
+            width: 1%;
+        }
+
+        .input-group input {
+            border-radius: 0 !important;
+        }
+
+    </style>
+
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Miners</h5>
-        </div>
-        <div class="card-body">
-            <div class="form-group"><label for="index">Index</label>
-                <div>
-                    <input id="index" type="text" class="form-control">
-                    <small class="form-text text-muted">Index du miner</small>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inherit">Héritage</label>
-                <div>
-                    <select name="inherit" id="inherit" class=form-control" multiple></select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="miners">Liste des blocks minable</label>
-                <select class="select" multiple id="miners"></select><small class="text-muted form-text">lister les blocks que l'item pourra casser</small>
-            </div>
+<div id="container">
 
+    <!-- Export modal dialog -->
+    <div class="modal fade" id="export-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export dialogs data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                            <pre id="export-area" class="json-body">
+                            </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ----- -->
+
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" data-dismiss="modal">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <img src="../assets/Minecraft_Formatting.gif" class="imagepreview" style="width: 100%;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import modal dialog -->
+    <div class="modal fade " id="importModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import dialogs data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="import-alert" class="alert alert-danger collapse" role="alert">
+                        <strong class="error-name"></strong><br/>
+                        <p class="error-content"></p>
+                    </div>
+                    <span>Import JSON file : <input type="file" id="importFile" name="file"/></span>
+                    <pre id="import-area" class="json-body">
+                                </pre>
+                </div>
+                <div class="modal-footer">
+                    <button v-on:click="convertFileContent()" type="button" class="btn btn-primary">Import data</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ----- -->
+
+
+    <!-- # NAV Section # -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="../index.html">Configurathering</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Itemizer Items&nbsp;</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary" v-on:click="addMiner()" href="#">Ajouter un élément </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" v-on:click="exportJSON()">Exporter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" v-on:click="importModal()">importer</a>
+                </li>
+
+            </ul>
+
+        </div>
+        <ul class="nav justify-content-end">
+            <li class="nav-item dropdown ml-1">
+                <a class="nav-link dropdown-toggle btn btn-outline-primary" data-toggle="dropdown" href="#"
+                   role="button" aria-haspopup="true" aria-expanded="false">Itemizer</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="itemizer_item.html">Items</a>
+                    <a class="dropdown-item" href="itemizer_miners.html">Miners</a>
+                    <a class="dropdown-item" href="#">Pools</a>
+                    <a class="dropdown-item" href="#">Crafts</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-1">
+                <a class="nav-link dropdown-toggle btn btn-outline-danger" data-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false">Brawlator</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Monster</a>
+                    <a class="dropdown-item" href="#">Spawner</a>
+                    <a class="dropdown-item" href="#">Loot table</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown ml-1">
+                <a class="nav-link dropdown-toggle btn btn-outline-success" data-toggle="dropdown" href="#"
+                   role="button" aria-haspopup="true" aria-expanded="false">Harvester</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Harvestables</a>
+                    <a class="dropdown-item" href="#">Loots</a>
+                </div>
+            </li>
+            <li class="nav-item ml-1">
+                <a class="nav-link btn btn-outline-warning" href="storyteller.html">Storyteller</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="accordion" id="minersList">
+            <div class="card" v-for="miner in miners">
+                <div class="card-header">
+                    <button class="btn btn-link" type="button" data-toggle="collapse"
+                            v-bind:data-target="'#collapse' + miner.id"
+                            aria-expanded="true" v-bind:aria-controls="'collapse' + miner.id">
+                        Miners - {{miner.index}}
+                    </button>
+                </div>
+                <div v-bind:id="'collapse'+miner.id" class="collapse show" v-bind:aria-labelledby="'heading' + miner.id"
+                     data-parent="#minerList">
+                    <div class="card-body">
+                        <div class="form-group"><label for="index">Index</label>
+                            <div>
+                                <input id="index" v-model="miner.index" type="text" class="form-control">
+                                <small class="form-text text-muted">Index du miner</small>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Héritage</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><button type="button" v-on:click="clearInherits()" class="close">&times;</button></span>
+                                    <span v-for="inherit in miner.inherits" class="input-group-text">
+                                        {{inherit}} <button class="close" v-on:click="removeInherit(miner.id,inherit)">
+                                        &times;
+                                    </button>
+                                    </span>
+                                </div>
+                                <input v-bind:name="'inherit' + miner.id" class="form-control">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-success" v-on:click="addInherit(miner.id)">Ajouter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">blocks</h5>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" v-for="block in miner.blocks">
+                                    <img v-bind:src="'../assets/item/' + block.img"><strong>{{block.minable}}</strong>
+                                    <a href="#" class="close" v-on:click="removeBlock(miner.id,block.id)">&times;</a>
+
+                                </li>
+                            </ul>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text">Liste des blocks minable</label>
+                                        </div>
+                                        <input class="form-control typeahead" v-bind:name="'block' + miner.id">
+                                        <div class="input-group-append">
+                                            <button v-on:click="addBlock(miner.id)" type="button"
+                                                    class="btn-outline-primary btn">
+                                                Ajouter
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <small class="text-muted form-text">lister les blocks que l'item pourra casser
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<script>
-/*    $(function(){
-       $("#inherit").select2({
-           tags : true,
-           tokenDelimiter:[","],
-           width: "100%"
-       });
-       $.getJSON("../assets/blockitem.json").done(function(data){
-           var result = {};
-           result.results = [];
-           $.each(data,function(index,value){
-               result.results.push({id : value.type + "-"+ value.meta , text : value.name})
-           });
-           console.log(result);
-
-           $("#miners").select2({
-               width : "100%",
-               data: result.results,
-               escapeMarkup: function(markup) {
-                   return markup;
-               },
-               templateResult:function (data) {
-               if (data.loading) return data.name;
-
-               markup = "<img src='assets/item/" + data.id + ".png' ><span>" + data.text + "</span>" + "<small>" + data.id + "</small>";
-
-               return markup;
-           }
-           })
-
-       });
-
-    });*/
-</script>
+<script src="itemizer_miners.js"></script>
 </body>
 </html>

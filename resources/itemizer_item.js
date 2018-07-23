@@ -5,7 +5,6 @@ const app = new Vue({
         itemsCount: 0,
         exportedJson: "",
         importedJson: "",
-        baseList : [],
         enchantList:[],
         itemsAdapter : {},
         modifiersList:[
@@ -29,29 +28,24 @@ const app = new Vue({
     mounted: function () {
         var self = this;
         $.getJSON("../assets/enchants.json").done(function(data){self.enchantList = data});
-        $.getJSON("../assets/blockitem.json").done(function(data){
-            self.baseList = $.map(data, function(value){
-                return value.text_type;
-            })
-
-        });
-        self.itemsAdapter = new Bloodhound({
+       self.itemsAdapter = new Bloodhound({
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            // url points to a json file that contains an array of country names, see
-            // https://github.com/twitter/typeahead.js/blob/gh-pages/data/countries.json
             prefetch: {
                 url: '../assets/blockitem.json',
                 filter: function (names) {
+                    console.log(names);
                     return $.map(names, function (name) {
-                        console.log(name);
-                        return {name: name.text_type,img : name.type + '-' + name.meta};
+                        return {name: 'minecraft:'+ name.text_type, img : name.type + '-' + name.meta};
                     });
                 }
+
             }
+
         });
 
-
+        self.itemsAdapter.clearPrefetchCache();
+        self.itemsAdapter.initialize();
     },
     methods: {
         addEnchant : function(itemId){
@@ -151,10 +145,22 @@ const app = new Vue({
             $.map(importedObject,function(elem){
                 if(elem.enchants === undefined)
                     elem.enchants = [];
+                else {
+                     $.map(elem.enchants,function(e){
+                        console.log(e);
+                        e.id = UUID();
+                    })
+                }
                 if(elem.attributes === undefined)
                     elem.attributes = [];
                 if(elem.miners === undefined)
                     elem.miners = [];
+                else{
+                    $.map(elem.attributes,function(e){
+                        e.id=UUID();
+                    })
+                }
+                console.log(JSON.stringify(elem));
                return elem;
             });
             return importedObject;
