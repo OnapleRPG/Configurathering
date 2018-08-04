@@ -7,3 +7,5 @@ This tool is designed to manage onaple plugins configuration files,
  this will pack whole css and js into _bundle_ files used by web pages.  
  To add more library to bundle add them to `module.js`. For the css, set the path of the `.css` file
  in the style section of the `package.json` 
+ 
+ Parceque il est faux
